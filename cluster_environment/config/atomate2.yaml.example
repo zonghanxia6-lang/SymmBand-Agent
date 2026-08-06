@@ -1,0 +1,10 @@
+# Copy to atomate2.yaml and replace the paths and MPI task count.
+# The workflow runs inside one scheduler allocation via jobflow.run_locally.
+VASP_CMD: "srun -n 32 /ABSOLUTE/PATH/vasp_std"
+VASP_GAMMA_CMD: "srun -n 32 /ABSOLUTE/PATH/vasp_gam"
+VASP_NCL_CMD: "srun -n 32 /ABSOLUTE/PATH/vasp_ncl"
+
+# Keep this consistent with the allocation and the KPAR=4 setting in band config.py.
+VASP_INCAR_UPDATES:
+  NCORE: 4
+

@@ -1,0 +1,52 @@
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.agent.example
+*.pem
+*.key
+
+# Python and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# Local environments and generated configuration
+.venv/
+cluster_environment/.venv/
+cluster_environment/config/atomate2.yaml
+cluster_environment/config/jobflow.yaml
+cluster_environment/config/runtime.env
+
+# Generated inference and calculation data
+.inference_cache/
+generated_structures/
+band-results/
+band_output/
+calculation_results/
+structures_pool/
+workflow.log
+*.log
+
+# VASP/IRVSP outputs
+WAVECAR*
+CHGCAR*
+OUTCAR*
+POTCAR*
+INCAR*
+KPOINTS*
+OSZICAR*
+vasprun.xml*
+PROCAR*
+EIGENVAL*
+IBZKPT*
+XDATCAR*
+outir*
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

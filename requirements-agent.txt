@@ -1,0 +1,16 @@
+anyio>=4.7.0
+argcomplete>=3.5.0
+genai-prices>=0.1.0
+griffelib>=2.0
+httpx>=0.27
+logfire-api>=3.14.1
+openai>=2.45.0
+opentelemetry-api>=1.28.0
+prompt-toolkit>=3
+pydantic>=2.12
+python-dotenv>=1.0
+pyperclip>=1.9.0
+pyyaml>=6.0.2
+rich>=13
+tiktoken>=0.12.0
+typing-inspection>=0.4.0

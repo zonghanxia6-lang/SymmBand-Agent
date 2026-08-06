@@ -1,0 +1,4 @@
+Metadata-Version: 2.4
+Name: pydantic-ai-slim
+Version: 0.0.0+local
+Summary: Local source checkout metadata shim

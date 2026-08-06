@@ -1,0 +1,14 @@
+# The Agent adapter replaces these JSONStore paths with per-structure paths before each run.
+JOB_STORE:
+  docs_store:
+    type: JSONStore
+    paths:
+      - /tmp/symmcd_jobflow_docs.json
+    read_only: false
+  additional_stores:
+    data:
+      type: JSONStore
+      paths:
+        - /tmp/symmcd_jobflow_data.json
+      read_only: false
+

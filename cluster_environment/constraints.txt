@@ -1,0 +1,8 @@
+torch==2.5.1
+torch-geometric==2.7.0
+torch-scatter==2.1.2
+pytorch-lightning==2.5.6
+mace-torch==0.3.15
+atomate2==0.1.5
+pydantic==2.12.4
+
