@@ -31,4 +31,6 @@ Write-Host ""
 Write-Host "Then commit and publish:"
 Write-Host "  git commit -m 'Initial SymmBand-Agent monorepo'"
 Write-Host "  gh repo create SymmBand-Agent --source=. --private --push"
-
+Write-Host "Or add an existing empty repository:"
+Write-Host "  git remote add origin https://github.com/YOUR_ACCOUNT/SymmBand-Agent.git"
+Write-Host "  git push -u origin main"

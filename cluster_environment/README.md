@@ -91,7 +91,7 @@ IRVSP_BIN="/path/to/irvsp" \
 bash configure.sh
 ```
 
-`configure.sh` 会根据三个同级源码目录生成 `.env.agent`、`atomate2.yaml`、`jobflow.yaml` 和 `runtime.env`。已有 `.env.agent` 中的 `LLM_API_KEY` 会被保留，其余 Windows 路径会替换为集群路径；也可以通过环境变量 `LLM_API_KEY` 显式传入，或运行后直接编辑该文件。也可以不使用脚本，复制并编辑模板：
+`configure.sh` 会根据单仓库内部目录生成 `.env.agent`、`atomate2.yaml`、`jobflow.yaml` 和 `runtime.env`。已有 `.env.agent` 中的 `LLM_API_KEY` 会被保留，其余 Windows 路径会替换为集群路径；也可以通过环境变量 `LLM_API_KEY` 显式传入，或运行后直接编辑该文件。也可以不使用脚本，复制并编辑模板：
 
 ```bash
 cp config/atomate2.yaml.example config/atomate2.yaml

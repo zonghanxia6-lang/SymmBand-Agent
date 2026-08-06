@@ -116,6 +116,13 @@ git commit -m "Initial SymmBand-Agent monorepo"
 gh repo create SymmBand-Agent --source=. --private --push
 ```
 
+如果没有安装 GitHub CLI，先在 GitHub 网页创建一个空的私有仓库，然后执行：
+
+```bash
+git remote add origin https://github.com/<YOUR_ACCOUNT>/SymmBand-Agent.git
+git push -u origin main
+```
+
 首次建议创建私有仓库。确认 `THIRD_PARTY_NOTICES.md` 中提到的 SymmCD、能带代码和模型权利后，再决定是否公开。
 
 ## 安全与版本控制

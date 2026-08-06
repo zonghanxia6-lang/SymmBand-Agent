@@ -35,4 +35,6 @@ echo
 echo "Then commit and publish:"
 echo "  git commit -m 'Initial SymmBand-Agent monorepo'"
 echo "  gh repo create SymmBand-Agent --source=. --private --push"
-
+echo "Or add an existing empty repository:"
+echo "  git remote add origin https://github.com/YOUR_ACCOUNT/SymmBand-Agent.git"
+echo "  git push -u origin main"
