@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1950" height="1180" viewBox="0 0 1950 1180" role="img" aria-labelledby="agent-title agent-desc">
+  <title id="agent-title">SymmBand-Agent capabilities</title>
+  <desc id="agent-desc">A standalone diagram showing conversational requests routed through a Pydantic AI agent to crystal generation, MACE energy and relaxation, band calculation, and local scientific knowledge retrieval tools.</desc>
+
+  <defs>
+    <style>
+      .a-font { font-family: Arial, Helvetica, "Liberation Sans", sans-serif; fill: #263238; }
+      .a-kicker { font: 700 16px Arial, Helvetica, sans-serif; letter-spacing: 2.4px; fill: #0072B2; }
+      .a-title { font: 700 34px Arial, Helvetica, sans-serif; fill: #263238; }
+      .a-subtitle { font: 400 18px Arial, Helvetica, sans-serif; fill: #52616B; }
+      .a-card-title { font: 700 22px Arial, Helvetica, sans-serif; fill: #263238; }
+      .a-body { font: 400 17px Arial, Helvetica, sans-serif; fill: #35434C; }
+      .a-small { font: 400 15px Arial, Helvetica, sans-serif; fill: #52616B; }
+      .a-chip { font: 700 14px Arial, Helvetica, sans-serif; letter-spacing: 0.7px; }
+      .a-mono { font: 600 16px "DejaVu Sans Mono", Consolas, monospace; fill: #263238; }
+      .a-on-dark { fill: #FFFFFF; }
+      .a-on-dark-accent { fill: #56B4E9; }
+      .a-on-dark-sub { fill: #D8E7ED; }
+      .a-arrow { fill: none; stroke: #667781; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#agent-arrow); }
+      .a-dash { fill: none; stroke: #87969F; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 8 7; }
+    </style>
+    <marker id="agent-arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5.5 L0,11 z" fill="#667781"/>
+    </marker>
+    <filter id="agent-shadow" x="-10%" y="-15%" width="120%" height="135%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#263238" flood-opacity="0.11"/>
+    </filter>
+    <linearGradient id="agent-core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F2FAFD"/>
+      <stop offset="1" stop-color="#EFF8F4"/>
+    </linearGradient>
+    <pattern id="agent-dots" width="26" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#B9DCEB" opacity="0.45"/>
+    </pattern>
+  </defs>
+
+  <rect width="1950" height="1180" fill="#F7FBFD"/>
+  <rect width="1950" height="1180" fill="url(#agent-dots)"/>
+  <text x="70" y="58" class="a-kicker">SYMMBAND-AGENT</text>
+  <text x="70" y="105" class="a-title">Conversational control for symmetry-guided materials discovery</text>
+  <text x="70" y="139" class="a-subtitle">One dialogue connects generation, atomistic energy, electronic bands, and curated symmetry knowledge.</text>
+
+  <g filter="url(#agent-shadow)">
+    <rect x="70" y="190" width="485" height="258" rx="28" fill="#FFFFFF" stroke="#B9DCEB" stroke-width="2"/>
+  </g>
+
+      <path d="M106 227 h44 a10 10 0 0 1 10 10 v24 a10 10 0 0 1-10 10 h-20 l-12 11 v-11 h-12 a10 10 0 0 1-10-10 v-24 a10 10 0 0 1 10-10z" fill="none" stroke="#0072B2" stroke-width="4" stroke-linejoin="round"/>
+      <circle cx="116" cy="249" r="3" fill="#0072B2"/><circle cx="128" cy="249" r="3" fill="#0072B2"/><circle cx="140" cy="249" r="3" fill="#0072B2"/>
+
+  <text x="186" y="230" class="a-kicker">CONVERSATION</text>
+  <text x="106" y="288" class="a-mono"><tspan x="106" dy="0">“Generate 10 BN structures in SG 194.”</tspan><tspan x="106" dy="42">“What is the energy of graphene.cif?”</tspan><tspan x="106" dy="42">“List accidental SOC particles in SG 216.”</tspan></text>
+  <rect x="106" y="402" width="413" height="30" rx="15" fill="#E7F4FA"/>
+  <text x="312" y="423" class="a-small" text-anchor="middle">follow-up context: “show structure 3”</text>
+
+  <path d="M555 319H630" class="a-arrow"/>
+  <g filter="url(#agent-shadow)">
+    <rect x="645" y="181" width="660" height="276" rx="34" fill="url(#agent-core)" stroke="#8CC8D8" stroke-width="3"/>
+  </g>
+
+      <rect x="700" y="229" width="58" height="45" rx="12" fill="#FFFFFF" stroke="#0072B2" stroke-width="3"/>
+      <path d="M729 229v-9m-6 0h12" stroke="#0072B2" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="719" cy="250" r="5" fill="#56B4E9"/><circle cx="739" cy="250" r="5" fill="#009E73"/>
+      <path d="M718 263q11 8 22 0" fill="none" stroke="#52616B" stroke-width="3" stroke-linecap="round"/>
+
+  <text x="790" y="230" class="a-title">Pydantic AI Agent</text>
+  <text x="790" y="262" class="a-subtitle">DeepSeek API · typed tools · validated arguments</text>
+  <line x1="700" y1="292" x2="1250" y2="292" stroke="#C7DDE5" stroke-width="2"/>
+  <rect x="700" y="322" width="164" height="50" rx="25" fill="#E7F4FA" stroke="#56B4E9"/>
+  <text x="782" y="354" class="a-chip" text-anchor="middle">understand</text>
+  <path d="M864 347H895" class="a-arrow"/>
+  <rect x="910" y="322" width="164" height="50" rx="25" fill="#E8F6F1" stroke="#75C7AA"/>
+  <text x="992" y="354" class="a-chip" text-anchor="middle">validate</text>
+  <path d="M1074 347H1105" class="a-arrow"/>
+  <rect x="1120" y="322" width="130" height="50" rx="25" fill="#FFF3DF" stroke="#E69F00"/>
+  <text x="1185" y="354" class="a-chip" text-anchor="middle">route</text>
+  <rect x="700" y="397" width="550" height="38" rx="19" fill="#F7ECF5"/>
+  <text x="975" y="422" class="a-small" text-anchor="middle">session memory · file registry · structured results</text>
+
+  <path d="M1305 319H1380" class="a-arrow"/>
+  <g filter="url(#agent-shadow)">
+    <rect x="1395" y="190" width="485" height="258" rx="28" fill="#FFFFFF" stroke="#B8E0D3" stroke-width="2"/>
+  </g>
+  <circle cx="1443" cy="235" r="25" fill="#009E73"/>
+  <path d="M1431 235l8 8 17-20" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1484" y="230" class="a-kicker">TRACEABLE RESPONSE</text>
+  <text x="1431" y="289" class="a-body"><tspan x="1431" dy="0">Live logs and progress</tspan><tspan x="1431" dy="34">Energy, formation energy, actual SG</tspan><tspan x="1431" dy="34">Generated files and band images</tspan><tspan x="1431" dy="34">Source-aware encyclopedia answers</tspan></text>
+
+  <path d="M975 457V522H285V596M975 522H745V596M975 522H1205V596M975 522H1665V596" class="a-dash"/>
+  <rect x="790" y="493" width="370" height="45" rx="22.5" fill="#263238"/>
+  <text x="975" y="523" class="a-chip" text-anchor="middle" fill="#FFFFFF">TOOL ROUTER</text>
+
+
+  <g filter="url(#agent-shadow)">
+    <rect x="70" y="596" width="430" height="296" rx="28" fill="#FFFFFF" stroke="#0072B2" stroke-width="2.5"/>
+  </g>
+  <circle cx="122" cy="649" r="29" fill="#0072B2"/>
+  <text x="122" y="659" class="a-card-title" text-anchor="middle" fill="#FFFFFF">1</text>
+  <text x="164" y="644" class="a-card-title">Crystal generation</text>
+  <text x="164" y="671" class="a-small">SymmCD workflow</text>
+  <line x1="104" y1="701" x2="466" y2="701" stroke="#DCE7EB" stroke-width="2"/>
+  <text x="104" y="746" class="a-body"><tspan x="104" dy="0">Formula · space group · count</tspan><tspan x="104" dy="27">Deduplication + actual SG</tspan><tspan x="104" dy="27">Per-sample live progress</tspan></text>
+  <rect x="104" y="840" width="362" height="34" rx="17" fill="#0072B2" opacity="0.11"/>
+  <text x="285" y="863" class="a-chip" text-anchor="middle" fill="#0072B2">OUTPUT  POSCAR / CIF candidates</text>
+
+  <g filter="url(#agent-shadow)">
+    <rect x="530" y="596" width="430" height="296" rx="28" fill="#FFFFFF" stroke="#009E73" stroke-width="2.5"/>
+  </g>
+  <circle cx="582" cy="649" r="29" fill="#009E73"/>
+  <text x="582" y="659" class="a-card-title" text-anchor="middle" fill="#FFFFFF">2</text>
+  <text x="624" y="644" class="a-card-title">Energy + relaxation</text>
+  <text x="624" y="671" class="a-small">MACE potential</text>
+  <line x1="564" y1="701" x2="926" y2="701" stroke="#DCE7EB" stroke-width="2"/>
+  <text x="564" y="746" class="a-body"><tspan x="564" dy="0">Read CIF or POSCAR</tspan><tspan x="564" dy="27">Total / per-atom energy</tspan><tspan x="564" dy="27">Formation energy + relaxed SG</tspan></text>
+  <rect x="564" y="840" width="362" height="34" rx="17" fill="#009E73" opacity="0.11"/>
+  <text x="745" y="863" class="a-chip" text-anchor="middle" fill="#009E73">OUTPUT  energies + structures</text>
+
+  <g filter="url(#agent-shadow)">
+    <rect x="990" y="596" width="430" height="296" rx="28" fill="#FFFFFF" stroke="#D97706" stroke-width="2.5"/>
+  </g>
+  <circle cx="1042" cy="649" r="29" fill="#D97706"/>
+  <text x="1042" y="659" class="a-card-title" text-anchor="middle" fill="#FFFFFF">3</text>
+  <text x="1084" y="644" class="a-card-title">Electronic bands</text>
+  <text x="1084" y="671" class="a-small">VASP · atomate2 · IRVSP</text>
+  <line x1="1024" y1="701" x2="1386" y2="701" stroke="#DCE7EB" stroke-width="2"/>
+  <text x="1024" y="746" class="a-body"><tspan x="1024" dy="0">DFT and SOC workflows</tspan><tspan x="1024" dy="27">Symmetry representation</tspan><tspan x="1024" dy="27">Automated band plotting</tspan></text>
+  <rect x="1024" y="840" width="362" height="34" rx="17" fill="#D97706" opacity="0.11"/>
+  <text x="1205" y="863" class="a-chip" text-anchor="middle" fill="#D97706">OUTPUT  band_*.png + data</text>
+
+  <g filter="url(#agent-shadow)">
+    <rect x="1450" y="596" width="430" height="296" rx="28" fill="#FFFFFF" stroke="#A64D9B" stroke-width="2.5"/>
+  </g>
+  <circle cx="1502" cy="649" r="29" fill="#A64D9B"/>
+  <text x="1502" y="659" class="a-card-title" text-anchor="middle" fill="#FFFFFF">4</text>
+  <text x="1544" y="644" class="a-card-title">Knowledge retrieval</text>
+  <text x="1544" y="671" class="a-small">Local encyclopedia index</text>
+  <line x1="1484" y1="701" x2="1846" y2="701" stroke="#DCE7EB" stroke-width="2"/>
+  <text x="1484" y="746" class="a-body"><tspan x="1484" dy="0">SOC / non-SOC particles</tspan><tspan x="1484" dy="27">Essential vs accidental</tspan><tspan x="1484" dy="27">High-symmetry k-paths</tspan></text>
+  <rect x="1484" y="840" width="362" height="34" rx="17" fill="#A64D9B" opacity="0.11"/>
+  <text x="1665" y="863" class="a-chip" text-anchor="middle" fill="#A64D9B">OUTPUT  sourced table + paths</text>
+
+
+  <g filter="url(#agent-shadow)">
+    <rect x="70" y="943" width="1810" height="155" rx="28" fill="#263238"/>
+  </g>
+  <text x="112" y="983" class="a-kicker a-on-dark-accent">EXAMPLE END-TO-END RUN</text>
+  <text x="112" y="1025" class="a-body a-on-dark">Generate 10 NaBi candidates in SG 194</text>
+  <path d="M489 1019H544" fill="none" stroke="#56B4E9" stroke-width="3" marker-end="url(#agent-arrow)"/>
+  <text x="570" y="1025" class="a-body a-on-dark">relax + rank with MACE</text>
+  <path d="M824 1019H879" fill="none" stroke="#75C7AA" stroke-width="3" marker-end="url(#agent-arrow)"/>
+  <text x="905" y="1025" class="a-body a-on-dark">launch SOC band workflow</text>
+  <path d="M1175 1019H1230" fill="none" stroke="#E69F00" stroke-width="3" marker-end="url(#agent-arrow)"/>
+  <text x="1256" y="1025" class="a-body a-on-dark">save plots + structured report</text>
+  <text x="112" y="1065" class="a-small a-on-dark-sub">Every tool call is explicit, inspectable, and reusable through conversational follow-up.</text>
+  <text x="1880" y="1144" class="a-small" text-anchor="end">SymmBand-Agent · capability overview</text>
+</svg>

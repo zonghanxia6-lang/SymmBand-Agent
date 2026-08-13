@@ -1,0 +1,47 @@
+{
+  "protocol_version": "1.0",
+  "hypothesis": "Emergent-particle-aware multi-objective ranking increases DFT topology discoveries at fixed budget.",
+  "candidate_budget_per_arm": 1000,
+  "seeds": [20260812, 20260813, 20260814],
+  "shared_targets": {
+    "spacegroups": [109, 186, 194, 216, 225],
+    "particles_soc": ["C-1 WP", "DP", "TP", "WNL", "WNL net"],
+    "composition_policy": "identical element-system and atom-count distributions in every arm"
+  },
+  "arms": [
+    {
+      "id": "random_spacegroup",
+      "description": "Random/pyxtal structures under the same composition and SG budget; no learned generator."
+    },
+    {
+      "id": "symmcd_no_topology",
+      "description": "Original SymmCD without a target SG or particle objective."
+    },
+    {
+      "id": "symmcd_spacegroup",
+      "description": "Original SymmCD conditioned only on target space group."
+    },
+    {
+      "id": "symmcd_spacegroup_particle",
+      "description": "SG-conditioned generation followed by particle-compatible symmetry/path ranking."
+    },
+    {
+      "id": "multiobjective",
+      "description": "SG + particle compatibility + novelty + stability/topology surrogate ranking."
+    }
+  ],
+  "funnel": [
+    "generated",
+    "parse+geometry+composition valid",
+    "target SG retained at symprec=0.01",
+    "StructureMatcher novel against frozen references",
+    "MACE geometry sanity and surrogate ranking",
+    "DFT relax/static and Ehull",
+    "SOC band+IRVSP emergent-particle hit",
+    "phonon validation"
+  ],
+  "primary_endpoints": [
+    "end-to-end multiobjective hit rate",
+    "discovery acceleration vs random_spacegroup at equal generated and DFT budgets"
+  ]
+}

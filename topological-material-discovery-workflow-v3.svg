@@ -1,0 +1,2042 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="2400"
+   height="1400"
+   viewBox="0 0 2400 1400"
+   role="img"
+   aria-labelledby="title desc"
+   version="1.1"
+   id="svg177"
+   sodipodi:docname="topological-material-discovery-workflow-v3.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   inkscape:export-filename="workflow-v3.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview177"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="1718.623"
+     inkscape:cy="605.63696"
+     inkscape:window-width="3840"
+     inkscape:window-height="2054"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg177" />
+  <title
+     id="title">Symmetry-guided generative discovery workflow for topological materials — revised version</title>
+  <desc
+     id="desc">A four-stage workflow: composition- and space-group-conditioned SymmCD generation; MACE relaxation using FIRE then BFGS; high-throughput DFT, SOC band and symmetry calculations with IRVSP; accidental and symmetry-enforced degeneracy detection followed by phonon validation and three discovered materials.</desc>
+  <defs
+     id="defs4">
+    <style
+       id="style1">
+      .font { font-family: &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #263238; }
+      .stage-no { font: 700 28px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #ffffff; }
+      .stage-title { font: 700 31px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #263238; }
+      .stage-sub { font: 400 19px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #52616b; }
+      .card-title { font: 700 25px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #263238; }
+      .label { font: 700 20px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #263238; }
+      .body { font: 400 19px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #35434c; }
+      .small { font: 400 16px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #52616b; }
+      .tiny { font: 400 14px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #52616b; }
+      .mono { font: 600 18px &quot;DejaVu Sans Mono&quot;, monospace; fill: #263238; }
+      .chip { font: 600 16px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #263238; }
+      .result { font: 700 20px &quot;Arial&quot;, &quot;Helvetica&quot;, &quot;Liberation Sans&quot;, sans-serif; fill: #263238; }
+      .arrow { fill: none; stroke: #667781; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrowhead); }
+      .arrow-blue { fill: none; stroke: #0072B2; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arrowblue); }
+      .arrow-orange { fill: none; stroke: #D97706; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; marker-end: url(#arroworange); }
+      .thin { fill: none; stroke: #87969f; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+      .dash { stroke-dasharray: 8 7; }
+    </style>
+    <marker
+       id="arrowhead"
+       markerWidth="11"
+       markerHeight="11"
+       refX="9"
+       refY="5.5"
+       orient="auto"
+       markerUnits="strokeWidth">
+      <path
+         d="M0,0 L10,5.5 L0,11 z"
+         fill="#667781"
+         id="path1" />
+    </marker>
+    <marker
+       id="arrowblue"
+       markerWidth="11"
+       markerHeight="11"
+       refX="9"
+       refY="5.5"
+       orient="auto"
+       markerUnits="strokeWidth">
+      <path
+         d="M0,0 L10,5.5 L0,11 z"
+         fill="#0072B2"
+         id="path2" />
+    </marker>
+    <marker
+       id="arroworange"
+       markerWidth="11"
+       markerHeight="11"
+       refX="9"
+       refY="5.5"
+       orient="auto"
+       markerUnits="strokeWidth">
+      <path
+         d="M0,0 L10,5.5 L0,11 z"
+         fill="#D97706"
+         id="path3" />
+    </marker>
+    <filter
+       id="shadow"
+       x="-0.0044326241"
+       y="-0.0084745763"
+       width="1.0088652"
+       height="1.0169492">
+      <feDropShadow
+         dx="0"
+         dy="4"
+         stdDeviation="5"
+         flood-color="#263238"
+         flood-opacity="0.10" />
+    </filter>
+    <linearGradient
+       id="bandfade"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#0072B2"
+         id="stop3" />
+      <stop
+         offset="1"
+         stop-color="#CC79A7"
+         id="stop4" />
+    </linearGradient>
+    <pattern
+       id="symmetry-matrix-grid"
+       width="7"
+       height="5"
+       patternUnits="userSpaceOnUse">
+      <rect
+         width="7"
+         height="5"
+         fill="#F7FBFD"
+         id="rect4" />
+      <path
+         d="M7 0H0V5"
+         fill="none"
+         stroke="#AFC9D6"
+         stroke-width="0.7"
+         id="path4" />
+    </pattern>
+  </defs>
+  <rect
+     width="2400"
+     height="1400"
+     fill="#FFFFFF"
+     id="rect5" />
+  <!-- Stage panels -->
+  <rect
+     x="42"
+     y="38"
+     width="470"
+     height="1315"
+     rx="28"
+     fill="#F5FAFD"
+     stroke="#B9DCEB"
+     stroke-width="2"
+     id="rect6" />
+  <rect
+     x="540"
+     y="38"
+     width="430"
+     height="1315"
+     rx="28"
+     fill="#F4FBF8"
+     stroke="#B8E0D3"
+     stroke-width="2"
+     id="rect7" />
+  <rect
+     x="998"
+     y="38"
+     width="690"
+     height="1315"
+     rx="28"
+     fill="#FFF9EF"
+     stroke="#F1D4A4"
+     stroke-width="2"
+     id="rect8" />
+  <rect
+     x="1716"
+     y="38"
+     width="642"
+     height="1315"
+     rx="28"
+     fill="#FBF7FC"
+     stroke="#E2CBE3"
+     stroke-width="2"
+     id="rect9" />
+  <!-- Stage headers -->
+  <circle
+     cx="88"
+     cy="90"
+     r="28"
+     fill="#0072B2"
+     id="circle9" />
+  <text
+     x="88"
+     y="100"
+     text-anchor="middle"
+     class="stage-no"
+     id="text9">1</text>
+  <text
+     x="130"
+     y="82"
+     class="stage-title"
+     id="text10">Crystal generation</text>
+  <text
+     x="130"
+     y="108"
+     class="stage-sub"
+     id="text11">symmetry- and chemistry-conditioned</text>
+  <circle
+     cx="586"
+     cy="90"
+     r="28"
+     fill="#009E73"
+     id="circle11" />
+  <text
+     x="586"
+     y="100"
+     text-anchor="middle"
+     class="stage-no"
+     id="text12">2</text>
+  <text
+     x="628"
+     y="82"
+     class="stage-title"
+     id="text13">ML relaxation</text>
+  <text
+     x="628"
+     y="108"
+     class="stage-sub"
+     id="text14">fast geometry optimization</text>
+  <circle
+     cx="1044"
+     cy="90"
+     r="28"
+     fill="#E69F00"
+     id="circle14" />
+  <text
+     x="1044"
+     y="100"
+     text-anchor="middle"
+     class="stage-no"
+     id="text15">3</text>
+  <text
+     x="1086"
+     y="82"
+     class="stage-title"
+     id="text16">High-throughput bands</text>
+  <text
+     x="1086"
+     y="108"
+     class="stage-sub"
+     id="text17">first-principles electronic workflow</text>
+  <circle
+     cx="1762"
+     cy="90"
+     r="28"
+     fill="#A64D9B"
+     id="circle17" />
+  <text
+     x="1762"
+     y="100"
+     text-anchor="middle"
+     class="stage-no"
+     id="text18">4</text>
+  <text
+     x="1804"
+     y="82"
+     class="stage-title"
+     id="text19">Topology &amp; validation</text>
+  <text
+     x="1804"
+     y="108"
+     class="stage-sub"
+     id="text20">degeneracy screening to discovery</text>
+  <!-- Stage 1: composition and explicit symmetry conditioning -->
+  <rect
+     x="76"
+     y="148"
+     width="402"
+     height="216"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#83C2DF"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect20" />
+  <text
+     x="100"
+     y="183"
+     class="card-title"
+     id="text21">User-defined conditions</text>
+  <rect
+     x="100"
+     y="199"
+     width="132"
+     height="65"
+     rx="12"
+     fill="#E1F1F8"
+     id="rect21" />
+  <text
+     x="116"
+     y="223"
+     class="tiny"
+     id="text22">Composition</text>
+  <text
+     x="116"
+     y="251"
+     class="mono"
+     id="text23">A-Mg-Bi</text>
+  <rect
+     x="244"
+     y="199"
+     width="210"
+     height="65"
+     rx="12"
+     fill="#E1F1F8"
+     id="rect23" />
+  <text
+     x="260"
+     y="223"
+     class="tiny"
+     id="text24">Specified space group</text>
+  <text
+     x="260"
+     y="251"
+     class="mono"
+     id="text25">G ∈ {1...230}</text>
+  <!-- 15-axis by 13-operation one-hot site-symmetry matrix -->
+  <g
+     transform="translate(100,280)"
+     id="g47">
+    <text
+       x="0"
+       y="16"
+       class="small"
+       id="text26">Symmetry matrix</text>
+    <text
+       x="0"
+       y="39"
+       class="tiny"
+       id="text27">15 axes × 13 operations</text>
+    <text
+       x="0"
+       y="60"
+       class="tiny"
+       id="text28">S ∈ {0,1}<tspan
+   baseline-shift="super"
+   font-size="10"
+   id="tspan27">15×13</tspan></text>
+    <g
+       transform="translate(228,0)"
+       id="g46">
+      <text
+         x="45.5"
+         y="-5"
+         text-anchor="middle"
+         class="tiny"
+         id="text29">13 operations</text>
+      <text
+         x="-10"
+         y="39"
+         text-anchor="middle"
+         class="tiny"
+         transform="rotate(-90 -10 39)"
+         id="text30">15 axes</text>
+      <path
+         d="M-5 0H0V75H-5 M96 0H91V75H96"
+         fill="none"
+         stroke="#506975"
+         stroke-width="1.8"
+         id="path30" />
+      <rect
+         x="0"
+         y="0"
+         width="91"
+         height="75"
+         fill="url(#symmetry-matrix-grid)"
+         id="rect30" />
+      <g
+         fill="#0072B2"
+         id="g45">
+        <rect
+           x="7"
+           y="0"
+           width="7"
+           height="5"
+           id="rect31" />
+        <rect
+           x="28"
+           y="5"
+           width="7"
+           height="5"
+           id="rect32" />
+        <rect
+           x="63"
+           y="10"
+           width="7"
+           height="5"
+           id="rect33" />
+        <rect
+           x="14"
+           y="15"
+           width="7"
+           height="5"
+           id="rect34" />
+        <rect
+           x="77"
+           y="20"
+           width="7"
+           height="5"
+           id="rect35" />
+        <rect
+           x="42"
+           y="25"
+           width="7"
+           height="5"
+           id="rect36" />
+        <rect
+           x="21"
+           y="30"
+           width="7"
+           height="5"
+           id="rect37" />
+        <rect
+           x="56"
+           y="35"
+           width="7"
+           height="5"
+           id="rect38" />
+        <rect
+           x="84"
+           y="40"
+           width="7"
+           height="5"
+           id="rect39" />
+        <rect
+           x="35"
+           y="45"
+           width="7"
+           height="5"
+           id="rect40" />
+        <rect
+           x="0"
+           y="50"
+           width="7"
+           height="5"
+           id="rect41" />
+        <rect
+           x="70"
+           y="55"
+           width="7"
+           height="5"
+           id="rect42" />
+        <rect
+           x="49"
+           y="60"
+           width="7"
+           height="5"
+           id="rect43" />
+        <rect
+           x="14"
+           y="65"
+           width="7"
+           height="5"
+           id="rect44" />
+        <rect
+           x="63"
+           y="70"
+           width="7"
+           height="5"
+           id="rect45" />
+      </g>
+    </g>
+  </g>
+  <path
+     d="M277 371 L277 397"
+     class="arrow-blue"
+     id="path47" />
+  <!-- Full 2D crystal reduced to a highlighted asymmetric unit -->
+  <rect
+     x="76"
+     y="405"
+     width="402"
+     height="286"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#83C2DF"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect47" />
+  <text
+     x="78"
+     y="440"
+     class="card-title"
+     id="text47"
+     style="font-style:normal;font-variant:normal;font-weight:700;font-stretch:normal;font-size:25px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">Full crystal → asymmetric unit(AU)</text>
+  <g
+     transform="translate(100,490)"
+     id="g68">
+    <text
+       x="68"
+       y="-13"
+       text-anchor="middle"
+       class="tiny"
+       id="text49"
+       style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:14px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">unit cell</text>
+    <rect
+       x="0"
+       y="0"
+       width="136"
+       height="136"
+       fill="#F7FBFD"
+       stroke="#0072B2"
+       stroke-width="2.4"
+       id="rect49" />
+    <path
+       d="M34 0V136 M68 0V136 M102 0V136 M0 34H136 M0 68H136 M0 102H136"
+       stroke="#C5D8E1"
+       stroke-width="1.1"
+       id="path49" />
+    <path
+       d="M68 0V136 M0 68H136 M0 0L136 136 M136 0L0 136"
+       stroke="#8FBACC"
+       stroke-width="1.4"
+       stroke-dasharray="5 4"
+       id="path50" />
+    <g
+       fill="#56B4E9"
+       stroke="#FFFFFF"
+       stroke-width="1.5"
+       id="g58">
+      <circle
+         cx="0"
+         cy="0"
+         r="6"
+         id="circle50" />
+      <circle
+         cx="68"
+         cy="0"
+         r="6"
+         id="circle51" />
+      <circle
+         cx="136"
+         cy="0"
+         r="6"
+         id="circle52" />
+      <circle
+         cx="0"
+         cy="68"
+         r="6"
+         id="circle53" />
+      <circle
+         cx="68"
+         cy="68"
+         r="7"
+         id="circle54" />
+      <circle
+         cx="136"
+         cy="68"
+         r="6"
+         id="circle55" />
+      <circle
+         cx="0"
+         cy="136"
+         r="6"
+         id="circle56" />
+      <circle
+         cx="68"
+         cy="136"
+         r="6"
+         id="circle57" />
+      <circle
+         cx="136"
+         cy="136"
+         r="6"
+         id="circle58" />
+    </g>
+    <g
+       fill="#E69F00"
+       stroke="#FFFFFF"
+       stroke-width="1.5"
+       id="g62">
+      <circle
+         cx="34"
+         cy="34"
+         r="6"
+         id="circle59" />
+      <circle
+         cx="102"
+         cy="34"
+         r="6"
+         id="circle60" />
+      <circle
+         cx="34"
+         cy="102"
+         r="6"
+         id="circle61" />
+      <circle
+         cx="102"
+         cy="102"
+         r="6"
+         id="circle62" />
+    </g>
+    <path
+       d="M68 68L68 0L136 0Z"
+       fill="#CC79A7"
+       fill-opacity="0.18"
+       stroke="#B23A82"
+       stroke-width="4"
+       stroke-linejoin="round"
+       id="path62" />
+    <text
+       x="103"
+       y="29"
+       text-anchor="middle"
+       class="tiny"
+       fill="#9A2D70"
+       id="text62">one AU</text>
+    <path
+       d="M150 68H183"
+       class="arrow-blue"
+       id="path63" />
+    <text
+       x="260"
+       y="-13"
+       text-anchor="middle"
+       class="tiny"
+       id="text63"
+       style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:14px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">asymmetric unit</text>
+    <path
+       d="M194 136L194 0L330 0Z"
+       fill="#F9EAF4"
+       stroke="#B23A82"
+       stroke-width="4"
+       stroke-linejoin="round"
+       id="path64" />
+    <path
+       d="M194 136L262 68L330 0"
+       stroke="#D5A1C6"
+       stroke-width="1.5"
+       stroke-dasharray="5 4"
+       id="path65" />
+    <circle
+       cx="194"
+       cy="136"
+       r="8"
+       fill="#56B4E9"
+       stroke="#263238"
+       id="circle65" />
+    <circle
+       cx="194"
+       cy="0"
+       r="8"
+       fill="#56B4E9"
+       stroke="#263238"
+       id="circle66" />
+    <circle
+       cx="262"
+       cy="68"
+       r="8"
+       fill="#E69F00"
+       stroke="#263238"
+       id="circle67" />
+    <circle
+       cx="330"
+       cy="0"
+       r="8"
+       fill="#56B4E9"
+       stroke="#263238"
+       id="circle68" />
+  </g>
+  <path
+     d="m 277,692 v 26"
+     class="arrow-blue"
+     id="path68" />
+  <!-- SymmCD operates on the asymmetric-unit representation -->
+  <rect
+     x="76"
+     y="732"
+     width="402"
+     height="284"
+     rx="20"
+     fill="#FFFFFF"
+     stroke="#56B4E9"
+     stroke-width="2.5"
+     filter="url(#shadow)"
+     id="rect69" />
+  <rect
+     x="76"
+     y="732"
+     width="402"
+     height="58"
+     rx="20"
+     fill="#D9EEF8"
+     id="rect70" />
+  <rect
+     x="76"
+     y="770"
+     width="402"
+     height="20"
+     fill="#D9EEF8"
+     id="rect71" />
+  <text
+     x="100"
+     y="770"
+     class="card-title"
+     id="text71">Modified SymmCD</text>
+  <text
+     x="100"
+     y="820"
+     class="label"
+     id="text72">Asymmetric-unit diffusion</text>
+  <text
+     x="100"
+     y="848"
+     class="small"
+     id="text73">joint denoising of k, X′, A′ and S</text>
+  <g
+     transform="translate(100,871)"
+     id="g80">
+    <rect
+       x="0"
+       y="0"
+       width="128"
+       height="76"
+       rx="12"
+       fill="#F4F7F8"
+       stroke="#B5C0C6"
+       id="rect73" />
+    <circle
+       cx="26"
+       cy="21"
+       r="8"
+       fill="#56B4E9"
+       id="circle73" />
+    <circle
+       cx="93"
+       cy="25"
+       r="7"
+       fill="#CC79A7"
+       id="circle74" />
+    <circle
+       cx="49"
+       cy="56"
+       r="7"
+       fill="#E69F00"
+       id="circle75" />
+    <circle
+       cx="102"
+       cy="58"
+       r="8"
+       fill="#009E73"
+       id="circle76" />
+    <text
+       x="64"
+       y="94"
+       text-anchor="middle"
+       class="tiny"
+       id="text76">noisy AU at t</text>
+    <path
+       d="M140 38 L178 38"
+       class="arrow-blue"
+       id="path76" />
+    <rect
+       x="188"
+       y="0"
+       width="128"
+       height="76"
+       rx="12"
+       fill="#EDF8FD"
+       stroke="#56B4E9"
+       id="rect76" />
+    <path
+       d="M211 58L211 17L291 17Z"
+       fill="#F9EAF4"
+       stroke="#B23A82"
+       stroke-width="2.2"
+       id="path77" />
+    <circle
+       cx="211"
+       cy="58"
+       r="7"
+       fill="#56B4E9"
+       id="circle77" />
+    <circle
+       cx="211"
+       cy="17"
+       r="7"
+       fill="#56B4E9"
+       id="circle78" />
+    <circle
+       cx="251"
+       cy="37"
+       r="7"
+       fill="#E69F00"
+       id="circle79" />
+    <circle
+       cx="291"
+       cy="17"
+       r="7"
+       fill="#CC79A7"
+       id="circle80" />
+    <text
+       x="252"
+       y="94"
+       text-anchor="middle"
+       class="tiny"
+       id="text80">denoised AU at t-1</text>
+  </g>
+  <rect
+     x="100"
+     y="977"
+     width="354"
+     height="27"
+     rx="10"
+     fill="#E8F5FA"
+     id="rect80" />
+  <text
+     x="277"
+     y="997"
+     text-anchor="middle"
+     class="small"
+     id="text81">Wyckoff projection + space-group replication</text>
+  <path
+     d="M277 1022 L277 1044"
+     class="arrow-blue"
+     id="path81" />
+  <rect
+     x="76"
+     y="1052"
+     width="402"
+     height="125"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#83C2DF"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect81" />
+  <text
+     x="100"
+     y="1089"
+     class="card-title"
+     id="text82">Symmetric candidate pool</text>
+  <g
+     transform="translate(103,1105)"
+     id="g85">
+    <path
+       d="M0 25 L25 2 L72 2 L48 25 Z M0 25 L0 59 L48 59 L48 25 M48 59 L72 37 L72 2"
+       fill="none"
+       stroke="#0072B2"
+       stroke-width="2.5"
+       id="path82" />
+    <circle
+       cx="16"
+       cy="17"
+       r="6"
+       fill="#56B4E9"
+       id="circle82" />
+    <circle
+       cx="57"
+       cy="16"
+       r="6"
+       fill="#CC79A7"
+       id="circle83" />
+    <circle
+       cx="29"
+       cy="45"
+       r="6"
+       fill="#009E73"
+       id="circle84" />
+    <text
+       x="94"
+       y="33"
+       class="small"
+       id="text84"
+       style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:16px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">target-symmetry CIF / POSCAR batches</text>
+  </g>
+  <rect
+     x="96"
+     y="1208"
+     width="360"
+     height="62"
+     rx="13"
+     fill="#E5F4FA"
+     id="rect85" />
+  <text
+     x="276"
+     y="1234"
+     text-anchor="middle"
+     class="small"
+     id="text86">The model learns and samples only the</text>
+  <text
+     x="276"
+     y="1258"
+     text-anchor="middle"
+     class="small"
+     id="text87">highlighted asymmetric-unit representation</text>
+  <!-- Inter-stage arrow 1 -->
+  <path
+     d="M490 684 L531 684"
+     class="arrow"
+     id="path87" />
+  <!-- Stage 2 -->
+  <rect
+     x="574"
+     y="160"
+     width="362"
+     height="142"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#74CDB0"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect87" />
+  <g
+     transform="translate(598,184)"
+     id="g90">
+    <circle
+       cx="38"
+       cy="42"
+       r="32"
+       fill="#D7F1E8"
+       stroke="#009E73"
+       stroke-width="2"
+       id="circle87" />
+    <path
+       d="M21 52 C29 25, 45 25, 55 52 M28 43 L48 43"
+       fill="none"
+       stroke="#009E73"
+       stroke-width="4"
+       stroke-linecap="round"
+       id="path88" />
+    <text
+       x="87"
+       y="34"
+       class="card-title"
+       id="text88">MACE</text>
+    <text
+       x="87"
+       y="64"
+       class="body"
+       id="text89">foundation ML potential</text>
+    <text
+       x="87"
+       y="91"
+       class="small"
+       id="text90">rapid energy / force evaluation</text>
+  </g>
+  <path
+     d="M755 309 L755 352"
+     class="arrow"
+     id="path90" />
+  <rect
+     x="574"
+     y="360"
+     width="362"
+     height="154"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#74CDB0"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect90" />
+  <circle
+     cx="622.48737"
+     cy="393.634"
+     r="22.487329"
+     fill="#009e73"
+     id="circle90"
+     style="stroke-width:0.803119" />
+  <circle
+     cx="624.4873"
+     cy="608.4873"
+     r="22.487329"
+     fill="#009e73"
+     id="circle90-9"
+     style="stroke-width:0.803119" />
+  <text
+     x="622"
+     y="404"
+     text-anchor="middle"
+     class="stage-no"
+     id="text91"
+     style="font-style:normal;font-variant:normal;font-weight:700;font-stretch:normal;font-size:28px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">1</text>
+  <text
+     x="665"
+     y="402"
+     class="card-title"
+     id="text92">FIRE relaxation</text>
+  <text
+     x="598"
+     y="447"
+     class="body"
+     id="text93">robust, fast descent from</text>
+  <text
+     x="598"
+     y="477"
+     class="body"
+     id="text94">generated geometries</text>
+  <path
+     d="M755 520 L755 563"
+     class="arrow"
+     id="path94" />
+  <rect
+     x="573.29285"
+     y="569.58575"
+     width="362"
+     height="154"
+     rx="18"
+     fill="#ffffff"
+     stroke="#74cdb0"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect94" />
+  <text
+     x="624"
+     y="619"
+     text-anchor="middle"
+     class="stage-no"
+     id="text95"
+     style="font-style:normal;font-variant:normal;font-weight:700;font-stretch:normal;font-size:28px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">2</text>
+  <text
+     x="665"
+     y="613"
+     class="card-title"
+     id="text96">BFGS refinement</text>
+  <text
+     x="598"
+     y="658"
+     class="body"
+     id="text97">quasi-Newton convergence</text>
+  <text
+     x="598"
+     y="688"
+     class="body"
+     id="text98">to a precise local minimum</text>
+  <path
+     d="M755 732 L755 775"
+     class="arrow"
+     id="path98" />
+  <rect
+     x="574"
+     y="783"
+     width="362"
+     height="206"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#A7DCCB"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect98" />
+  <text
+     x="598"
+     y="820"
+     class="card-title"
+     id="text99">Structural screening</text>
+  <g
+     transform="translate(598,845)"
+     id="g102">
+    <circle
+       cx="13"
+       cy="13"
+       r="13"
+       fill="#D7F1E8"
+       id="circle99" />
+    <path
+       d="M7 13 L12 18 L21 8"
+       fill="none"
+       stroke="#007C5B"
+       stroke-width="3"
+       id="path99" />
+    <text
+       x="38"
+       y="19"
+       class="body"
+       id="text100">force / stress converged</text>
+    <circle
+       cx="13"
+       cy="58"
+       r="13"
+       fill="#D7F1E8"
+       id="circle100" />
+    <path
+       d="M7 58 L12 63 L21 53"
+       fill="none"
+       stroke="#007C5B"
+       stroke-width="3"
+       id="path100" />
+    <text
+       x="38"
+       y="64"
+       class="body"
+       id="text101">symmetry re-identified</text>
+    <circle
+       cx="13"
+       cy="103"
+       r="13"
+       fill="#D7F1E8"
+       id="circle101" />
+    <path
+       d="M7 103 L12 108 L21 98"
+       fill="none"
+       stroke="#007C5B"
+       stroke-width="3"
+       id="path101" />
+    <text
+       x="38"
+       y="109"
+       class="body"
+       id="text102">duplicate structures removed</text>
+  </g>
+  <path
+     d="M755 996 L755 1039"
+     class="arrow"
+     id="path102" />
+  <rect
+     x="574"
+     y="1047"
+     width="362"
+     height="116"
+     rx="18"
+     fill="#DFF4EC"
+     stroke="#009E73"
+     stroke-width="2.5"
+     id="rect102" />
+  <text
+     x="755"
+     y="1090"
+     text-anchor="middle"
+     class="card-title"
+     id="text103">Relaxed structure pool</text>
+  <text
+     x="755"
+     y="1123"
+     text-anchor="middle"
+     class="body"
+     id="text104">ready for ab initio screening</text>
+  <rect
+     x="598"
+     y="1193"
+     width="314"
+     height="64"
+     rx="12"
+     fill="#E8F7F1"
+     id="rect104" />
+  <text
+     x="755"
+     y="1220"
+     text-anchor="middle"
+     class="small"
+     id="text105">Two-stage optimization balances</text>
+  <text
+     x="755"
+     y="1245"
+     text-anchor="middle"
+     class="small"
+     id="text106">robustness and final accuracy</text>
+  <!-- Inter-stage arrow 2 -->
+  <path
+     d="M948 684 L989 684"
+     class="arrow"
+     id="path106" />
+  <!-- Stage 3 -->
+  <rect
+     x="1032"
+     y="158"
+     width="622"
+     height="136"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#E7B454"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect106" />
+  <text
+     x="1058"
+     y="197"
+     class="card-title"
+     id="text107">Standardize &amp; verify geometry</text>
+  <text
+     x="1058"
+     y="229"
+     class="body"
+     id="text108">primitive standard cell  →  DFT relaxation</text>
+  <rect
+     x="1058"
+     y="247"
+     width="270"
+     height="29"
+     rx="14"
+     fill="#FFF0CD"
+     id="rect108" />
+  <text
+     x="1193"
+     y="268"
+     text-anchor="middle"
+     class="chip"
+     id="text109">SpacegroupAnalyzer + atomate2</text>
+  <path
+     d="M1343 302 L1343 343"
+     class="arrow-orange"
+     id="path109" />
+  <rect
+     x="1139"
+     y="351"
+     width="408"
+     height="118"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#E7B454"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect109" />
+  <text
+     x="1343"
+     y="393"
+     text-anchor="middle"
+     class="card-title"
+     id="text110">SCF with spin–orbit coupling</text>
+  <text
+     x="1343"
+     y="429"
+     text-anchor="middle"
+     class="body"
+     id="text111">converged charge density + E<tspan
+   baseline-shift="sub"
+   font-size="14"
+   id="tspan110">F</tspan></text>
+  <!-- Branch from SCF -->
+  <path
+     d="M1343 476 L1343 510 L1157 510 L1157 548"
+     class="arrow-orange"
+     id="path111" />
+  <path
+     d="M1343 510 L1530 510 L1530 548"
+     class="arrow-orange"
+     id="path112" />
+  <rect
+     x="1032"
+     y="556"
+     width="285"
+     height="188"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#E7B454"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect112" />
+  <text
+     x="1056"
+     y="594"
+     class="card-title"
+     id="text112">Band + SOC</text>
+  <text
+     x="1056"
+     y="625"
+     class="body"
+     id="text113">line-mode k path</text>
+  <text
+     x="1056"
+     y="654"
+     class="body"
+     id="text114">WAVECAR + vasprun.xml</text>
+  <g
+     transform="translate(1061,673)"
+     id="g115">
+    <line
+       x1="0"
+       y1="44"
+       x2="225"
+       y2="44"
+       stroke="#B7C1C7"
+       stroke-width="2"
+       stroke-dasharray="6 5"
+       id="line114" />
+    <path
+       d="M0 64 C35 12, 76 14, 112 48 C147 82, 184 82, 225 20"
+       fill="none"
+       stroke="#0072B2"
+       stroke-width="3"
+       id="path114" />
+    <path
+       d="M0 12 C35 70, 76 72, 112 39 C147 7, 184 8, 225 72"
+       fill="none"
+       stroke="#CC79A7"
+       stroke-width="3"
+       id="path115" />
+  </g>
+  <rect
+     x="1369"
+     y="556"
+     width="285"
+     height="188"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#E7B454"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect115" />
+  <text
+     x="1393"
+     y="594"
+     class="card-title"
+     id="text115">One-step symmetry</text>
+  <text
+     x="1393"
+     y="625"
+     class="body"
+     id="text116">ISYM = 2, without SOC</text>
+  <text
+     x="1393"
+     y="654"
+     class="body"
+     id="text117">unbroken symmetry operators</text>
+  <g
+     transform="translate(1420,676)"
+     id="g120">
+    <circle
+       cx="25"
+       cy="28"
+       r="12"
+       fill="#E69F00"
+       id="circle117" />
+    <circle
+       cx="90"
+       cy="28"
+       r="12"
+       fill="#E69F00"
+       id="circle118" />
+    <circle
+       cx="155"
+       cy="28"
+       r="12"
+       fill="#E69F00"
+       id="circle119" />
+    <path
+       d="M25 15 L25 0 M90 15 L90 0 M155 15 L155 0 M25 40 L25 58 M90 40 L90 58 M155 40 L155 58"
+       class="thin"
+       id="path119" />
+    <path
+       d="M13 28 L0 28 M37 28 L50 28 M78 28 L65 28 M102 28 L115 28 M143 28 L130 28 M167 28 L180 28"
+       class="thin"
+       id="path120" />
+  </g>
+  <!-- Merge to IRVSP -->
+  <path
+     d="M1175 752 L1175 786 L1343 786 L1343 818"
+     class="arrow-orange"
+     id="path121" />
+  <path
+     d="M1511 752 L1511 786 L1343 786"
+     class="thin"
+     id="path122" />
+  <rect
+     x="1062"
+     y="826"
+     width="562"
+     height="158"
+     rx="18"
+     fill="#FFF1D4"
+     stroke="#D99400"
+     stroke-width="2.5"
+     filter="url(#shadow)"
+     id="rect122" />
+  <text
+     x="1090"
+     y="866"
+     class="card-title"
+     id="text122">Symmetry-resolved post-processing</text>
+  <text
+     x="1090"
+     y="899"
+     class="body"
+     id="text123">patch symmetry block  →  run IRVSP</text>
+  <text
+     x="1090"
+     y="931"
+     class="body"
+     id="text124">parse eigenvalues, degeneracies and irreps</text>
+  <rect
+     x="1090"
+     y="948"
+     width="246"
+     height="24"
+     rx="12"
+     fill="#FFFFFF"
+     id="rect124" />
+  <text
+     x="1213"
+     y="965"
+     text-anchor="middle"
+     class="chip"
+     id="text125">automatic modular analysis</text>
+  <path
+     d="M1343 992 L1343 1032"
+     class="arrow-orange"
+     id="path125" />
+  <rect
+     x="1062"
+     y="1040"
+     width="562"
+     height="179"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#E7B454"
+     stroke-width="2"
+     filter="url(#shadow)"
+     id="rect125" />
+  <text
+     x="1090"
+     y="1078"
+     class="card-title"
+     id="text126">Irrep-resolved band structure</text>
+  <g
+     transform="translate(1094,1097)"
+     id="g128">
+    <line
+       x1="0"
+       y1="50"
+       x2="500"
+       y2="50"
+       stroke="#ABB7BE"
+       stroke-width="2"
+       stroke-dasharray="7 6"
+       id="line126" />
+    <path
+       d="M0 90 C80 15, 168 16, 250 70 C332 124, 414 105, 500 18"
+       fill="none"
+       stroke="#0072B2"
+       stroke-width="4"
+       id="path126" />
+    <path
+       d="M0 15 C80 98, 168 102, 250 50 C332 0, 414 2, 500 104"
+       fill="none"
+       stroke="#CC79A7"
+       stroke-width="4"
+       id="path127" />
+    <circle
+       cx="232"
+       cy="60"
+       r="11"
+       fill="#ffffff"
+       stroke="#d55e00"
+       stroke-width="4"
+       id="circle127" />
+    <text
+       x="258"
+       y="26"
+       class="tiny"
+       id="text128">Γ<tspan
+   baseline-shift="sub"
+   font-size="11"
+   id="tspan127">i</tspan> ↔ Γ<tspan
+   baseline-shift="sub"
+   font-size="11"
+   id="tspan128">j</tspan></text>
+  </g>
+  <text
+     x="1343"
+     y="1261"
+     text-anchor="middle"
+     class="small"
+     id="text129">Parallel jobs and fault-tolerant batch execution</text>
+  <!-- Inter-stage arrow 3 -->
+  <path
+     d="M1670 684 L1707 684"
+     class="arrow"
+     id="path129" />
+  <!-- Stage 4 branch header -->
+  <path
+     d="M2037 152 L2037 181 L1878 181 L1878 207"
+     class="arrow"
+     id="path130" />
+  <path
+     d="M2037 181 L2197 181 L2197 207"
+     class="arrow"
+     id="path131" />
+  <!-- Accidental degeneracy -->
+  <rect
+     x="1746"
+     y="215"
+     width="282"
+     height="333"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#CC79A7"
+     stroke-width="2.5"
+     filter="url(#shadow)"
+     id="rect131" />
+  <rect
+     x="1746"
+     y="215"
+     width="282"
+     height="59"
+     rx="18"
+     fill="#F3E1F1"
+     id="rect132" />
+  <rect
+     x="1746"
+     y="255"
+     width="282"
+     height="19"
+     fill="#F3E1F1"
+     id="rect133" />
+  <text
+     x="1887"
+     y="253"
+     text-anchor="middle"
+     class="card-title"
+     id="text133">Accidental crossing</text>
+  <g
+     transform="translate(1773,296)"
+     id="g150">
+    <circle
+       cx="12"
+       cy="12"
+       r="12"
+       fill="#F3E1F1"
+       id="circle133" />
+    <text
+       x="12"
+       y="18"
+       text-anchor="middle"
+       class="chip"
+       id="text134">1</text>
+    <text
+       x="35"
+       y="18"
+       class="body"
+       id="text135">scan adjacent bands</text>
+    <circle
+       cx="12"
+       cy="63"
+       r="12"
+       fill="#F3E1F1"
+       id="circle135" />
+    <text
+       x="12"
+       y="69"
+       text-anchor="middle"
+       class="chip"
+       id="text136">2</text>
+    <text
+       x="35"
+       y="69"
+       class="body"
+       id="text137">local gap minimum</text>
+    <text
+       x="35"
+       y="94"
+       class="mono"
+       id="text138">ΔE &lt; 0.03 eV</text>
+    <circle
+       cx="12"
+       cy="132"
+       r="12"
+       fill="#F3E1F1"
+       id="circle138" />
+    <text
+       x="12"
+       y="138"
+       text-anchor="middle"
+       class="chip"
+       id="text139">3</text>
+    <text
+       x="35"
+       y="138"
+       class="body"
+       id="text140">verify irrep exchange</text>
+    <text
+       x="35"
+       y="164"
+       class="mono"
+       id="text141">Γᵢ / Γⱼ  ↔  Γⱼ / Γᵢ</text>
+    <!-- Accidental band crossing between two high-symmetry points -->
+    <g
+       transform="translate(10,181)"
+       id="g149">
+      <line
+         x1="0"
+         y1="0"
+         x2="0"
+         y2="76"
+         stroke="#52616B"
+         stroke-width="2.6"
+         id="line141" />
+      <line
+         x1="226"
+         y1="0"
+         x2="226"
+         y2="76"
+         stroke="#52616B"
+         stroke-width="2.6"
+         id="line142" />
+      <line
+         x1="0"
+         y1="38"
+         x2="226"
+         y2="38"
+         stroke="#D3DCE1"
+         stroke-width="1.4"
+         stroke-dasharray="5 4"
+         id="line143" />
+      <path
+         d="M0 12 C56 18, 81 30, 113 38 C145 47, 174 60, 226 67"
+         fill="none"
+         stroke="#D55E00"
+         stroke-width="3.6"
+         id="path143" />
+      <path
+         d="M0 67 C55 59, 82 47, 113 38 C145 29, 174 17, 226 11"
+         fill="none"
+         stroke="#0072B2"
+         stroke-width="3.6"
+         id="path144" />
+      <circle
+         cx="113"
+         cy="38"
+         r="10"
+         fill="#FFFFFF"
+         fill-opacity="0.75"
+         stroke="#A64D9B"
+         stroke-width="3.2"
+         id="circle144" />
+      <text
+         x="9"
+         y="13"
+         class="tiny"
+         fill="#D55E00"
+         id="text144">Γᵢ</text>
+      <text
+         x="9"
+         y="64"
+         class="tiny"
+         fill="#0072B2"
+         id="text145">Γⱼ</text>
+      <text
+         x="203"
+         y="13"
+         class="tiny"
+         fill="#0072B2"
+         id="text146">Γⱼ</text>
+      <text
+         x="203"
+         y="65"
+         class="tiny"
+         fill="#D55E00"
+         id="text147">Γᵢ</text>
+      <text
+         x="0"
+         y="96"
+         text-anchor="middle"
+         class="label"
+         id="text148">Γ</text>
+      <text
+         x="226"
+         y="96"
+         text-anchor="middle"
+         class="label"
+         id="text149">X</text>
+    </g>
+  </g>
+  <!-- Essential degeneracy -->
+  <rect
+     x="2046"
+     y="215"
+     width="282"
+     height="333"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#7B61A8"
+     stroke-width="2.5"
+     filter="url(#shadow)"
+     id="rect150" />
+  <line
+     x1="2187.3"
+     y1="462"
+     x2="2187.3"
+     y2="538"
+     stroke="#52616b"
+     stroke-width="2.6"
+     id="line141-8" />
+  <text
+     x="2187.2266"
+     y="555.72461"
+     text-anchor="middle"
+     class="label"
+     id="text148-2"
+     style="font-style:normal;font-variant:normal;font-weight:700;font-stretch:normal;font-size:20px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif;fill:#263238">Γ</text>
+  <rect
+     x="2046"
+     y="215"
+     width="282"
+     height="59"
+     rx="18"
+     fill="#ECE7F5"
+     id="rect151" />
+  <rect
+     x="2046"
+     y="255"
+     width="282"
+     height="19"
+     fill="#ECE7F5"
+     id="rect152" />
+  <text
+     x="2187"
+     y="253"
+     text-anchor="middle"
+     class="card-title"
+     id="text152">Essential degeneracy</text>
+  <text
+     x="2073"
+     y="309"
+     class="body"
+     id="text153">little-group irreps at</text>
+  <text
+     x="2073"
+     y="338"
+     class="body"
+     id="text154">high-symmetry k points / lines</text>
+  <rect
+     x="2073"
+     y="365"
+     width="228"
+     height="70"
+     rx="12"
+     fill="#F3F0F8"
+     id="rect154" />
+  <text
+     x="2187"
+     y="393"
+     text-anchor="middle"
+     class="mono"
+     id="text155">dim(Γ) &gt; 1</text>
+  <text
+     x="2187"
+     y="421"
+     text-anchor="middle"
+     class="small"
+     id="text156">symmetry-enforced node</text>
+  <g
+     transform="translate(2082,454)"
+     id="g157">
+    <line
+       x1="0"
+       y1="44"
+       x2="210"
+       y2="44"
+       stroke="#AFB8BE"
+       stroke-width="2"
+       id="line156" />
+    <path
+       d="M10 78 L105 44 L200 12"
+       fill="none"
+       stroke="#7B61A8"
+       stroke-width="3"
+       id="path156" />
+    <path
+       d="M10 12 L105 44 L200 78"
+       fill="none"
+       stroke="#7B61A8"
+       stroke-width="3"
+       id="path157" />
+    <circle
+       cx="105"
+       cy="44"
+       r="9"
+       fill="#FFFFFF"
+       stroke="#7B61A8"
+       stroke-width="3"
+       id="circle157" />
+  </g>
+  <!-- Merge -->
+  <path
+     d="m 1887,560 v 24 h 150 v 31"
+     class="arrow"
+     id="path158" />
+  <path
+     d="m 2187,560 v 24 h -150"
+     class="thin"
+     id="path159" />
+  <rect
+     x="1800"
+     y="625"
+     width="474"
+     height="101"
+     rx="18"
+     fill="#f0eaf4"
+     stroke="#a64d9b"
+     stroke-width="2.5"
+     id="rect159" />
+  <text
+     x="2037"
+     y="664"
+     text-anchor="middle"
+     class="card-title"
+     id="text159"
+     style="font-style:normal;font-variant:normal;font-weight:700;font-stretch:normal;font-size:25px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">Topological candidate set</text>
+  <text
+     x="2037"
+     y="698"
+     text-anchor="middle"
+     class="body"
+     id="text160"
+     style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:19px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">ranked by node type and energy window</text>
+  <path
+     d="m 2037,760 v 36"
+     class="arrow"
+     id="path160" />
+  <!-- Phonon validation -->
+  <rect
+     x="1800"
+     y="772"
+     width="474"
+     height="176"
+     rx="18"
+     fill="#FFFFFF"
+     stroke="#67A88F"
+     stroke-width="2.5"
+     filter="url(#shadow)"
+     id="rect160" />
+  <text
+     x="1858"
+     y="877"
+     class="card-title"
+     id="text161"
+     style="font-style:normal;font-variant:normal;font-weight:700;font-stretch:normal;font-size:25px;line-height:normal;font-family:Arial, Helvetica, 'Liberation Sans', sans-serif">Dynamical-stability validation</text>
+  <path
+     d="M2037 956 L2037 986"
+     class="arrow"
+     id="path165" />
+  <!-- Discoveries -->
+  <rect
+     x="1746"
+     y="994"
+     width="582"
+     height="290"
+     rx="20"
+     fill="#EFF8F4"
+     stroke="#009E73"
+     stroke-width="3"
+     filter="url(#shadow)"
+     id="rect165" />
+  <text
+     x="2037"
+     y="1035"
+     text-anchor="middle"
+     class="card-title"
+     id="text165">Phonon-stable topological discoveries</text>
+  <g
+     transform="translate(1766,1060)"
+     id="g169">
+    <rect
+       x="0"
+       y="0"
+       width="174"
+       height="185"
+       rx="15"
+       fill="#FFFFFF"
+       stroke="#B6DCCE"
+       id="rect166" />
+    <g
+       transform="translate(37,24)"
+       id="g168">
+      <path
+         d="M0 36 L33 4 L99 4 L66 36 Z M0 36 L0 93 L66 93 L66 36 M66 93 L99 61 L99 4"
+         fill="none"
+         stroke="#0072B2"
+         stroke-width="2.3"
+         id="path166" />
+      <circle
+         cx="18"
+         cy="22"
+         r="8"
+         fill="#56B4E9"
+         id="circle166" />
+      <circle
+         cx="76"
+         cy="23"
+         r="9"
+         fill="#CC79A7"
+         id="circle167" />
+      <circle
+         cx="35"
+         cy="70"
+         r="9"
+         fill="#009E73"
+         id="circle168" />
+    </g>
+    <text
+       x="87"
+       y="143"
+       text-anchor="middle"
+       class="result"
+       id="text168">LiMgBi</text>
+    <text
+       x="87"
+       y="169"
+       text-anchor="middle"
+       class="small"
+       id="text169">C222</text>
+  </g>
+  <g
+     transform="translate(1950,1060)"
+     id="g172">
+    <rect
+       x="0"
+       y="0"
+       width="174"
+       height="185"
+       rx="15"
+       fill="#FFFFFF"
+       stroke="#B6DCCE"
+       id="rect169" />
+    <g
+       transform="translate(40,21)"
+       id="g171">
+      <path
+         d="M0 18 L48 0 L94 18 L48 36 Z M0 18 L0 82 L48 104 L48 36 M48 104 L94 82 L94 18"
+         fill="none"
+         stroke="#0072B2"
+         stroke-width="2.3"
+         id="path169" />
+      <circle
+         cx="48"
+         cy="18"
+         r="9"
+         fill="#E69F00"
+         id="circle169" />
+      <circle
+         cx="22"
+         cy="57"
+         r="9"
+         fill="#009E73"
+         id="circle170" />
+      <circle
+         cx="72"
+         cy="62"
+         r="9"
+         fill="#CC79A7"
+         id="circle171" />
+    </g>
+    <text
+       x="87"
+       y="143"
+       text-anchor="middle"
+       class="result"
+       id="text171">KMgBi</text>
+    <text
+       x="87"
+       y="169"
+       text-anchor="middle"
+       class="small"
+       id="text172">P4m2</text>
+  </g>
+  <g
+     transform="translate(2134,1060)"
+     id="g176">
+    <rect
+       x="0"
+       y="0"
+       width="174"
+       height="185"
+       rx="15"
+       fill="#FFFFFF"
+       stroke="#B6DCCE"
+       id="rect172" />
+    <g
+       transform="translate(36,20)"
+       id="g175">
+      <path
+         d="M8 19 L51 0 L94 19 L94 75 L51 98 L8 75 Z M8 19 L51 42 L94 19 M51 42 L51 98"
+         fill="none"
+         stroke="#0072B2"
+         stroke-width="2.3"
+         id="path172" />
+      <circle
+         cx="51"
+         cy="22"
+         r="9"
+         fill="#D55E00"
+         id="circle172" />
+      <circle
+         cx="24"
+         cy="58"
+         r="8"
+         fill="#009E73"
+         id="circle173" />
+      <circle
+         cx="77"
+         cy="60"
+         r="9"
+         fill="#CC79A7"
+         id="circle174" />
+      <circle
+         cx="51"
+         cy="79"
+         r="7"
+         fill="#CC79A7"
+         id="circle175" />
+    </g>
+    <text
+       x="87"
+       y="143"
+       text-anchor="middle"
+       class="result"
+       id="text175">CaMgBi₂</text>
+    <text
+       x="87"
+       y="169"
+       text-anchor="middle"
+       class="small"
+       id="text176">P6₃/mmc</text>
+  </g>
+  <!-- concise footer -->
+  <text
+     x="2037"
+     y="1320"
+     text-anchor="middle"
+     class="small"
+     id="text177">Generation → relaxation → electronic topology → lattice stability</text>
+  <metadata
+     id="metadata177">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Symmetry-guided generative discovery workflow for topological materials — revised version</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+</svg>

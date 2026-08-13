@@ -1,0 +1,18 @@
+{
+  "review_date": "2026-08-13",
+  "spacegroup_policy": "trust_completed_irvsp_after_review",
+  "independent_spglib_spacegroup_is_audit_only": true,
+  "exclusion_rules": {
+    "stability": [
+      "candidate mapping is ambiguous or missing",
+      "no completed converged static/relax energy label"
+    ],
+    "topology": [
+      "candidate mapping is ambiguous or missing",
+      "SOC band calculation is incomplete",
+      "IRVSP outir is missing",
+      "automatic band analysis failed"
+    ]
+  },
+  "note": "A completed IRVSP result is not rejected solely because an independent spglib tolerance audit reports another space group. Raw audit fields remain preserved."
+}

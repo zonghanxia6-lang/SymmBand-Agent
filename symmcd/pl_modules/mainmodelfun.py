@@ -662,7 +662,9 @@ class CSPDiffusion(BaseModule):
         }
 
     @torch.no_grad()
-    def sample(self, batch, diff_ratio=1.0, step_lr=1e-5, return_traj=False, num_steps=None, fixed_atom_types=None):
+    def sample(
+            self, batch, diff_ratio=1.0, step_lr=1e-5, return_traj=False,
+            num_steps=None, fixed_atom_types=None, smc_callback=None, show_progress=True):
         """
         Sample new crystals from the model.
 
@@ -675,10 +677,18 @@ class CSPDiffusion(BaseModule):
             fixed_atom_types: (Optional) LongTensor of shape (total_nodes,).
                               If provided, locks the atom types to these values
                               and only generates coordinates/lattice.
+            smc_callback: Optional inference-only callback that can return particle
+                          ancestor indices for equal-size batch resampling.
+            show_progress: Whether to render the tqdm diffusion progress bar.
         """
         batch = batch.to(self.device)
 
         batch_size = batch.num_graphs
+        if smc_callback is not None:
+            unique_atom_counts = torch.unique(batch.num_atoms)
+            if len(unique_atom_counts) != 1:
+                raise ValueError("SMC resampling requires equal atom counts in every particle")
+            smc_atoms_per_particle = int(unique_atom_counts[0].item())
         ks_mask, ks_add = sg_to_ks_mask(batch.spacegroup)
 
         # 初始化噪声（t=T）
@@ -725,7 +735,9 @@ class CSPDiffusion(BaseModule):
 
         traj = defaultdict(list)
 
-        for i in tqdm(range(1, len(step_indices)), desc="Sampling", leave=False):
+        for i in tqdm(
+                range(1, len(step_indices)), desc="Sampling", leave=False,
+                disable=not show_progress):
             t = step_indices[i - 1].item()
             next_t = step_indices[i].item()
 
@@ -816,9 +828,12 @@ class CSPDiffusion(BaseModule):
             # Update discrete features (Atom Types & Site Symm)
             pred_t_dense, _ = to_dense_batch(pred_t, batch.batch, fill_value=0)
             pred_symm_dense, _ = to_dense_batch(pred_symm, batch.batch, fill_value=0)
+            t_t_dense, _ = to_dense_batch(t_t, batch.batch, fill_value=0)
+            symm_t_dense, _ = to_dense_batch(symm_t, batch.batch, fill_value=0)
 
             t_next, symm_next = self.discrete_noise.sample_zs_from_zt_and_pred(
-                t_t, symm_t, pred_t_dense, pred_symm_dense, times, torch.full_like(times, next_t), node_mask,
+                t_t_dense, symm_t_dense, pred_t_dense, pred_symm_dense,
+                times, torch.full_like(times, next_t), node_mask,
                 batch.spacegroup
             )
             t_next = t_next[node_mask]
@@ -832,6 +847,37 @@ class CSPDiffusion(BaseModule):
             # 但为了逻辑完整性保留它
             t_t = t_next
             symm_t = symm_next
+
+            if smc_callback is not None:
+                callback_result = smc_callback({
+                    'step': i,
+                    'diffusion_time': next_t,
+                    'is_final_step': i == len(step_indices) - 1,
+                    'frac_coords': x_t,
+                    'lattices': l_t,
+                    'ks': k_t,
+                    'atom_types': t_t,
+                    'site_symm': symm_t,
+                })
+                if callback_result and callback_result.get('ancestors') is not None:
+                    ancestors = torch.as_tensor(
+                        callback_result['ancestors'], device=self.device, dtype=torch.long
+                    )
+                    if ancestors.numel() != batch_size:
+                        raise ValueError("SMC callback returned the wrong number of ancestors")
+
+                    def resample_graph_tensor(tensor):
+                        return tensor.index_select(0, ancestors)
+
+                    def resample_node_tensor(tensor):
+                        shape = (batch_size, smc_atoms_per_particle, *tensor.shape[1:])
+                        return tensor.reshape(shape).index_select(0, ancestors).reshape_as(tensor)
+
+                    x_t = resample_node_tensor(x_t)
+                    t_t = resample_node_tensor(t_t)
+                    symm_t = resample_node_tensor(symm_t)
+                    l_t = resample_graph_tensor(l_t)
+                    k_t = resample_graph_tensor(k_t)
 
             if return_traj:
                 traj['x'].append(x_t.cpu())

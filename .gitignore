@@ -11,6 +11,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.agent_history/
 .coverage
 
 # Local environments and generated configuration
@@ -22,13 +23,28 @@ cluster_environment/config/runtime.env
 
 # Generated inference and calculation data
 .inference_cache/
+input_structures/*
+!input_structures/README.md
 generated_structures/
 band-results/
 band_output/
-calculation_results/
+calculation_results/*
+!calculation_results/README.md
 structures_pool/
+research_data/
+research_models/*
+!research_models/particles/
+research_models/particles/*
+!research_models/particles/particle_dp_surrogate.joblib
+!research_models/particles/particle_dp_metrics.json
+!research_models/particles/particle_dp_oof_predictions.csv
+!research_models/particles/particle_dp_compatibility_conflicts.csv
+!research_models/particles/particle_dp_training_exclusions.csv
 workflow.log
 *.log
+
+# Copyrighted source papers are local references, not runtime dependencies.
+emergent particles/*.pdf
 
 # VASP/IRVSP outputs
 WAVECAR*

@@ -124,6 +124,23 @@ def validate(python_only: bool, load_models: bool) -> tuple[dict, bool]:
     else:
         fail("mace_model", "no local MACE model found")
 
+    structure_input_dir = Path(
+        os.getenv("STRUCTURE_INPUT_DIR", str(SYMMCD_ROOT / "input_structures"))
+    ).expanduser()
+    if structure_input_dir.is_dir():
+        ok("structure_input_dir", str(structure_input_dir.resolve()))
+    else:
+        fail("structure_input_dir", f"not found: {structure_input_dir}")
+
+    energy_output_root = Path(
+        os.getenv(
+            "ENERGY_OUTPUT_ROOT",
+            str(SYMMCD_ROOT / "calculation_results" / "mace_energy"),
+        )
+    ).expanduser()
+    energy_output_root.mkdir(parents=True, exist_ok=True)
+    ok("energy_output_root", str(energy_output_root.resolve()))
+
     if (pydantic_root / "pydantic_ai_slim" / "pydantic_ai").is_dir():
         ok("pydantic_ai_source", str(pydantic_root))
     else:

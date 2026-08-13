@@ -15,7 +15,7 @@ if not hasattr(torch.compiler, "is_compiling"):
 from ase.io import read, write
 from ase.optimize import FIRE, BFGS
 from ase.filters import ExpCellFilter
-from mace.calculators import mace_mp
+from mace_energy import load_mace_calculator
 
 # PyTorch Geometric & Pymatgen
 from torch_geometric.data import Data, Batch
@@ -31,13 +31,25 @@ from pathlib import Path
 
 class DualLogger:
     def __init__(self, filepath):
-        self.terminal = sys.stdout
+        self.terminal = self._unwrap_rich_proxy(sys.stdout)
         self.log = open(filepath, "a", encoding="utf-8")
 
+    @staticmethod
+    def _unwrap_rich_proxy(stream):
+        """Avoid a Rich FileProxy -> Console -> sys.stdout recursion loop."""
+        seen = set()
+        while id(stream) not in seen:
+            seen.add(id(stream))
+            proxied_stream = getattr(stream, "rich_proxied_file", None)
+            if proxied_stream is None or proxied_stream is stream:
+                break
+            stream = proxied_stream
+        return stream
+
     def write(self, message):
-        self.terminal.write(message)
         self.log.write(message)
         self.log.flush()
+        self.terminal.write(message)
 
     def flush(self):
         self.terminal.flush()
@@ -96,6 +108,22 @@ class WorkflowConfig:
 
 
 @dataclass
+class GeneratedStructureRecord:
+    """Metadata for one accepted structure, ordered by acceptance time."""
+
+    structure_number: int
+    sample_index: int
+    poscar_path: str
+    actual_spacegroup_number: int
+    actual_spacegroup_symbol: str
+    mace_total_energy_ev: float | None
+    mace_energy_per_atom_ev: float | None
+    energy_description: str = (
+        "MACE potential energy of the accepted POSCAR; strict formation energy is not calculated"
+    )
+
+
+@dataclass
 class WorkflowResult:
     formula: str
     spacegroup_number: int
@@ -105,10 +133,10 @@ class WorkflowResult:
     output_directory: str
     rejected_directory: str
     log_file: str
+    structures: list[GeneratedStructureRecord] = field(default_factory=list)
 
 
 _MODEL_CACHE: dict[tuple[str, str], CSPDiffusion] = {}
-_MACE_CACHE: dict[tuple[str, str], object] = {}
 
 
 def atomic_numbers_from_formula(formula: str) -> list[int]:
@@ -188,14 +216,7 @@ def _load_generation_model(config: WorkflowConfig, device: str) -> CSPDiffusion:
 
 
 def _load_mace_calculator(config: WorkflowConfig):
-    cache_key = (config.mace_model, config.mace_device)
-    if cache_key not in _MACE_CACHE:
-        _MACE_CACHE[cache_key] = mace_mp(
-            model=config.mace_model,
-            default_dtype="float64",
-            device=config.mace_device,
-        )
-    return _MACE_CACHE[cache_key]
+    return load_mace_calculator(config.mace_model, config.mace_device)
 
 
 # ==========================================
@@ -305,6 +326,7 @@ def _run_generation(config: WorkflowConfig, output_dir: Path, others_dir: Path, 
     target_sg = config.spacegroup_number
     target_atoms = atomic_numbers_from_formula(config.formula)
     accepted_poscars: list[str] = []
+    structure_records: list[GeneratedStructureRecord] = []
 
     print("\n" + "*" * 60)
     print(f"[启动时间] {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -414,6 +436,7 @@ def _run_generation(config: WorkflowConfig, output_dir: Path, others_dir: Path, 
             continue
 
         final_path = None
+        final_energy = None
 
         if enable_relax:
             # --- 阶段 B: MACE 预弛豫 (FIRE) ---
@@ -426,6 +449,7 @@ def _run_generation(config: WorkflowConfig, output_dir: Path, others_dir: Path, 
             if e_final_pre is not None:
                 if e_final_pre < config.energy_cutoff:
                     final_path = prerelaxed_path
+                    final_energy = e_final_pre
                     bypass_fine_relax = True
                 elif e_final_pre > config.energy_upper_cutoff:
                     print(f"  [判定] 预弛豫能量过高，放弃任务。")
@@ -438,6 +462,7 @@ def _run_generation(config: WorkflowConfig, output_dir: Path, others_dir: Path, 
                     output_name_base=f"{current_prefix}_finerelax",
                     max_steps=config.fine_relax_steps, fmax_target=0.05, opt_algorithm=BFGS
                 )
+                final_energy = e_final_bfgs
         else:
             final_path = work_cif_path
 
@@ -469,10 +494,46 @@ def _run_generation(config: WorkflowConfig, output_dir: Path, others_dir: Path, 
                     target_poscar_name = f"POSCAR_{current_prefix}"
                     target_poscar_path = os.path.join(output_dir, target_poscar_name)
                     final_std_struct.to(filename=target_poscar_path, fmt="poscar")
-                    accepted_poscars.append(str(Path(target_poscar_path).resolve()))
+                    resolved_poscar_path = str(Path(target_poscar_path).resolve())
+                    accepted_poscars.append(resolved_poscar_path)
+                    structure_number = len(accepted_poscars)
+                    reported_energy = final_energy
+                    if mace_calc is not None:
+                        try:
+                            accepted_atoms = read(resolved_poscar_path)
+                            accepted_atoms.calc = mace_calc
+                            reported_energy = float(accepted_atoms.get_potential_energy())
+                        except Exception as energy_error:
+                            print(
+                                "         - 警告: 最终 POSCAR 的 MACE 单点复算失败，"
+                                f"使用弛豫末态能量: {energy_error}"
+                            )
+                    energy_per_atom = (
+                        reported_energy / len(final_std_struct)
+                        if reported_energy is not None and len(final_std_struct) > 0
+                        else None
+                    )
+                    structure_records.append(
+                        GeneratedStructureRecord(
+                            structure_number=structure_number,
+                            sample_index=sample_id,
+                            poscar_path=resolved_poscar_path,
+                            actual_spacegroup_number=final_sg_num,
+                            actual_spacegroup_symbol=final_sg_symbol,
+                            mace_total_energy_ev=reported_energy,
+                            mace_energy_per_atom_ev=energy_per_atom,
+                        )
+                    )
 
                     print("  [判定结果] 结构符合初始对称性要求。")
+                    print(f"         - 验收结构编号: {structure_number}")
                     print(f"         - 最终空间群: {final_sg_symbol} (No. {final_sg_num})")
+                    if reported_energy is not None:
+                        print(f"         - MACE 总势能: {reported_energy:.6f} eV")
+                        print(f"         - MACE 每原子势能: {energy_per_atom:.6f} eV/atom")
+                        print("         - 说明: 该数值不是严格热力学形成能")
+                    else:
+                        print("         - MACE 能量: 未计算（当前任务禁用了弛豫）")
                     print(f"         - 成功导出严格对称初基原胞: {target_poscar_path}")
                 else:
                     # 【不符合要求】 无论怎么扶都扶不回来的结构（畸变过大），扔进 others 文件夹
@@ -507,6 +568,7 @@ def _run_generation(config: WorkflowConfig, output_dir: Path, others_dir: Path, 
         output_directory=str(output_dir.resolve()),
         rejected_directory=str(others_dir.resolve()),
         log_file=str(log_path.resolve()),
+        structures=structure_records,
     )
 
 

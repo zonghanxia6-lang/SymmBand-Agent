@@ -65,10 +65,20 @@ vi ../.env.agent
 PYDANTIC_AI_SOURCE=/work/$USER/SymmBand-Agent/vendor/pydantic-ai
 MACE_MODEL=/work/$USER/SymmBand-Agent/macemodel/2023-12-03-mace-128-L1_epoch-199.model
 MACE_DEVICE=cuda
+STRUCTURE_INPUT_DIR=/work/$USER/SymmBand-Agent/input_structures
+ENERGY_OUTPUT_ROOT=/work/$USER/SymmBand-Agent/calculation_results/mace_energy
 BAND_ANALYZER_ROOT=/work/$USER/SymmBand-Agent/band_analysis
 BAND_PYTHON=/work/$USER/miniconda3/envs/symmcd-band-agent/bin/python
 BAND_OUTPUT_ROOT=/work/$USER/SymmBand-Agent/band-results
 ```
+
+已有结构的能量计算不需要 VASP。把文件放入 `STRUCTURE_INPUT_DIR` 后运行：
+
+```bash
+python structure_agent.py --prompt "我要计算这个 graphene.cif 的能量"
+```
+
+结果写入 `ENERGY_OUTPUT_ROOT/<structure>_<timestamp>/mace_energy.json`。这是未弛豫的 MACE 单点总能量和每原子能量，不包含 `E_hull`。
 
 ## 4. 配置 VASP、POTCAR 和 IRVSP
 

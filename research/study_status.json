@@ -1,0 +1,109 @@
+{
+  "catalog": {
+    "status": "complete",
+    "candidate_count": 17212,
+    "valid_structure_count": 16496,
+    "release_path": "research_data/catalog_release",
+    "curated_path": "E:/symmcd/STRUCTURE_CURATED_FINAL"
+  },
+  "available_generation_metrics": {
+    "parse_valid_rate": 0.999710,
+    "structural_valid_rate": 0.958401,
+    "target_element_set_retention_rate": 0.649837,
+    "strict_stoichiometry_retention_rate": 0.316640,
+    "strict_target_spacegroup_retention_rate_all_candidates": 0.393272,
+    "symmetry_tolerance_sensitive_rate": 0.199105,
+    "mace_relaxation_divergence_rate": 0.027597,
+    "structurematcher_internal_unique_given_element_condition_rate": 0.437282
+  },
+  "downloaded_dft": {
+    "status": "retrospective_labels_complete",
+    "material_count": 340,
+    "vasp_job_count": 1401,
+    "mapped_candidate_count": 309,
+    "relax_converged_count": 333,
+    "soc_band_and_irvsp_count": 328,
+    "relaxed_spacegroup_recalculated_count": 338,
+    "band_symmetry_consistent_count": 337,
+    "target_spacegroup_retained_count": 294,
+    "low_relative_polymorph_energy_count": 213,
+    "archive_metadata2_unique_new_material_count": 90,
+    "archive_metadata2_summary": "research_data/dft_release/archive_metadata2_summary.json",
+    "note": "Relative polymorph energy is referenced only within the downloaded structures of the same reduced formula; it is not formation energy or Ehull."
+  },
+  "retrospective_topology": {
+    "status": "screening_labels_complete",
+    "raw_analyzed_count": 328,
+    "mapped_reliable_candidate_count": 298,
+    "strict_hit_count": 148,
+    "low_energy_and_strict_hit_count": 102,
+    "confirmed_particle_material_counts": {
+      "C-1 WP": 13,
+      "DNL": 61,
+      "DP": 104,
+      "WNL": 10
+    },
+    "note": "These are automated high-symmetry-path screening hits, not complete topological-invariant confirmations."
+  },
+  "surrogate_models": {
+    "status": "baseline_complete",
+    "stability_proxy": {
+      "labeled_count": 301,
+      "roc_auc": 0.680935,
+      "average_precision": 0.799046
+    },
+    "topology": {
+      "labeled_count": 297,
+      "roc_auc": 0.742926,
+      "average_precision": 0.697309
+    },
+    "note": "Chemical-system grouped cross-validation was used. Performance is sufficient only for prioritization and requires prospective validation."
+  },
+  "prenovelty_funnel": {
+    "status": "complete_pending_external_novelty",
+    "budget": 500,
+    "tier_a_strict_stoichiometry_count": 381,
+    "tier_b_element_set_only_count": 119,
+    "formula_spacegroup_group_count": 192,
+    "particle_portfolio_type_count": 10,
+    "path": "research_data/funnel_release/prenovelty_funnel_500.csv"
+  },
+  "mp20_novelty": {
+    "status": "complete",
+    "reference_structure_count": 45229,
+    "valid_candidate_count": 16496,
+    "formula_covered_candidate_count": 9180,
+    "formula_coverage_rate": 0.556499,
+    "structure_matched_count": 603,
+    "not_matched_within_covered_formula_count": 8577,
+    "not_matched_rate_given_formula_covered": 0.934314,
+    "strict_novel_internal_unique_candidate_count": 387,
+    "tiered_fixed_budget_queue": "research_data/funnel_release/mp20_training_set_novel_funnel_500_tiered.csv",
+    "composition_novel_count": 7316,
+    "structure_novel_count": 8577,
+    "training_set_novel_count": 15893,
+    "training_set_novel_rate": 0.963446,
+    "note": "Both composition-novel and structure-novel candidates are novel relative to MP20 training data; global database novelty remains unevaluated."
+  },
+  "random_baseline": {
+    "status": "protocol_ready_not_dft_evaluated",
+    "matched_formula_spacegroup_pairs": 131,
+    "registered_candidate_budget": 1070
+  },
+  "full_materials_project_novelty": {
+    "status": "pending_current_database_snapshot",
+    "metric": null,
+    "note": "MP20 analysis is complete, but a current full Materials Project snapshot is still required for a database-wide novelty claim."
+  },
+  "publication_claims_not_yet_available": {
+    "formation_energy_or_ehull": "Missing compatible elemental and competing-phase DFT references.",
+    "phonon_stability": "No phonon outputs were present in calculation_results.",
+    "fixed_budget_acceleration": "The matched random-space-group and ablation arms have not received the same DFT budget.",
+    "external_novelty": "MP20-relative novelty is complete; full current Materials Project comparison is pending.",
+    "confirmed_topological_materials": "Wilson-loop/topological-invariant and expert band validation are pending."
+  },
+  "symmcd_topology_conditioning": {
+    "status": "not_modified",
+    "decision_gate": "Modify SymmCD only after prospective fixed-budget selection beats the matched baselines and the post-generation selector is shown to be the bottleneck."
+  }
+}

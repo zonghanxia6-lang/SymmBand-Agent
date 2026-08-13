@@ -1,0 +1,42 @@
+{
+  "task": "particle_dp",
+  "particle": "DP",
+  "spacegroup_scope": "all compatible SOC space groups",
+  "labeled_count": 234,
+  "positive_count": 97,
+  "compatible_hard_negative_count": 137,
+  "excluded_compatibility_conflict_count": 6,
+  "excluded_invalid_structure_count": 1,
+  "chemical_system_group_count": 22,
+  "positive_chemical_system_group_count": 12,
+  "negative_chemical_system_group_count": 22,
+  "cv": "5-fold StratifiedGroupKFold by chemical system",
+  "positive_base_rate": 0.41453,
+  "balanced_accuracy_at_0_5": 0.642449,
+  "average_precision": 0.677799,
+  "roc_auc": 0.716231,
+  "brier_score": 0.204104,
+  "top_20_percent_count": 47,
+  "precision_at_top_20_percent": 0.723404,
+  "enrichment_at_top_20_percent": 1.74512,
+  "enrichment_at_top_20_percent_group_bootstrap_95_ci": [
+    1.355306,
+    2.385982
+  ],
+  "sg194_oof_metrics": {
+    "labeled_count": 116,
+    "positive_count": 42,
+    "positive_base_rate": 0.362069,
+    "average_precision": 0.596896,
+    "roc_auc": 0.700129,
+    "precision_at_top_20_percent": 0.708333,
+    "enrichment_at_top_20_percent": 1.956349
+  },
+  "validated_for_smc": true,
+  "validation_probability": "raw group-held-out random-forest probability",
+  "deployment_calibration": "Platt scaling fitted to all OOF prediction-label pairs",
+  "catalog_sha256": "abc7c79d641190c0f62aaace8e16845db7cf16c766e8cb485a49b4664a3c2eb8",
+  "labels_sha256": "cda36114bc1ba82d9d1fbece6852841a42feaa318850bd6a7e4b7ab1dbf79f36",
+  "random_seed": 20260813,
+  "warning": "Screening surrogate only; strict SOC band/IRVSP validation remains required."
+}

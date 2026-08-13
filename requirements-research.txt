@@ -1,0 +1,5 @@
+joblib>=1.4
+mp-api>=0.45
+numpy>=2.0
+pymatgen>=2025.10
+scikit-learn>=1.4
