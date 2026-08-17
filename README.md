@@ -1,54 +1,60 @@
 # SymmBand-Agent
 
-Research workflow: see `research/README.md` for structure reclassification, Materials
-Project novelty matching, ablations, surrogate models, and the fixed-budget DFT funnel.
+For the research workflow—including structure reclassification, Materials Project
+novelty matching, ablation studies, surrogate models, and the fixed-budget DFT
+funnel—see [`research/README.md`](research/README.md).
 
-完整的端到端执行逻辑、必需文件和禁止上传内容见 [`WORKFLOW.md`](WORKFLOW.md)，
-GitHub 发布边界见 [`RELEASE_MANIFEST.md`](RELEASE_MANIFEST.md)。
+The complete end-to-end execution logic, required files, and data that must not be
+published are documented in [`WORKFLOW.md`](WORKFLOW.md). The GitHub release boundary
+is defined in [`RELEASE_MANIFEST.md`](RELEASE_MANIFEST.md).
 
 ![SymmBand-Agent integrated workflow](topological-material-discovery-workflow-v3-agent-integrated.svg)
 
-SymmBand-Agent 是一个对话式晶体结构生成与能带计算项目。用户可以直接输入：
+SymmBand-Agent is a conversational workflow for crystal-structure generation and
+electronic-band calculations. A user can submit a request such as:
 
 ```text
-我要生成10个194号空间群的NaBi结构，然后计算它的能带
+Generate 10 NaBi structures in space group 194, then calculate their band structures.
 ```
 
-Agent 会依次执行：
+The agent then performs the following stages:
 
-1. Pydantic AI 调用 DeepSeek，将自然语言解析为化学式、空间群号和采样数。
-2. SymmCD 使用 `epoch699.ckpt` 进行条件扩散采样。
-3. MACE 对生成结构进行弛豫，并筛选元素和空间群都符合要求的 POSCAR。
-4. atomate2/jobflow 对合格 POSCAR 执行 VASP Relax、SOC-SCF、SOC-Band 和对称性计算。
-5. IRVSP 分析不可约表示，最终生成 `band_*.png`。
+1. Pydantic AI calls DeepSeek to parse the natural-language request into a chemical
+   formula, space-group number, and sample count.
+2. SymmCD uses `epoch699.ckpt` for conditional diffusion sampling.
+3. MACE relaxes the generated structures and retains POSCAR files whose elements and
+   recovered space groups satisfy the request.
+4. atomate2/jobflow runs VASP relaxation, SOC-SCF, SOC band, and symmetry calculations
+   for the accepted POSCAR files.
+5. IRVSP analyzes irreducible representations and the workflow produces `band_*.png`.
 
-## 目录结构
+## Repository layout
 
 ```text
 SymmBand-Agent/
-├── structure_agent.py          对话 Agent 主入口
-├── workflow_sym.py             SymmCD + MACE 结构生成
-├── mace_energy.py              已有 CIF/POSCAR 的 MACE 单点能计算
-├── band_workflow.py            能带子进程桥接
-├── band_result_analysis.py     已完成能带的偶然简并与百科路径比对
-├── emergent_particles.py       本地演生粒子索引查询
-├── input_structures/           用户提供的 CIF/POSCAR 输入目录
-├── symmcd/                     checkpoint 推理所需源码
-├── inverse_design/             新颖性、代理模型、漏斗与TDS-inspired SMC
-├── research_models/particles/  可部署DP代理及审计文件
-├── emergent particles/         token-efficient百科JSON索引
-├── band_analysis/              atomate2/VASP/IRVSP 能带工作流
-├── vendor/pydantic-ai/         Pydantic AI 运行时源码快照
-├── epoch699.ckpt               SymmCD checkpoint（Git LFS）
-├── macemodel/                  本地 MACE 模型（Git LFS）
-├── cluster_environment/        Conda/pip、集群和 Slurm 配置
-├── tests/                      Agent 与桥接层测试
-└── scripts/                    GitHub 仓库初始化脚本
+├── structure_agent.py          Main conversational-agent entry point
+├── workflow_sym.py             SymmCD + MACE structure generation
+├── mace_energy.py              MACE single-point energy for an existing CIF/POSCAR
+├── band_workflow.py            Subprocess bridge for the band workflow
+├── band_result_analysis.py     Accidental-degeneracy and path-index comparison
+├── emergent_particles.py       Local emergent-particle index lookup
+├── input_structures/           User-provided CIF/POSCAR inputs
+├── symmcd/                     Source required for checkpoint inference
+├── inverse_design/             Novelty, surrogates, funnel, and TDS-inspired SMC
+├── research_models/particles/  Deployable DP surrogate and audit artifacts
+├── emergent particles/         Token-efficient encyclopedia JSON index
+├── band_analysis/              atomate2/VASP/IRVSP band workflow
+├── vendor/pydantic-ai/         Vendored Pydantic AI runtime snapshot
+├── epoch699.ckpt               SymmCD checkpoint tracked with Git LFS
+├── macemodel/                  Local MACE model tracked with Git LFS
+├── cluster_environment/        Conda/pip, cluster, and Slurm configuration
+├── tests/                      Agent and bridge-layer tests
+└── scripts/                    GitHub preparation and audit scripts
 ```
 
-## 快速开始
+## Quick start
 
-Linux/GPU 集群推荐：
+Recommended setup for a Linux GPU cluster:
 
 ```bash
 cd cluster_environment
@@ -57,7 +63,7 @@ conda activate symmcd-band-agent
 cd ..
 ```
 
-复制并编辑 Agent 配置：
+Copy and edit the agent configuration:
 
 ```bash
 cp .env.agent.example .env.agent
@@ -65,7 +71,7 @@ chmod 600 .env.agent
 vi .env.agent
 ```
 
-配置完成后检查：
+Validate the environment and configuration:
 
 ```bash
 python cluster_environment/validate_environment.py --python-only
@@ -73,159 +79,185 @@ python structure_agent.py --show-config
 python structure_agent.py --check-band
 ```
 
-运行：
+Start an interactive session or submit a one-shot request:
 
 ```bash
 python structure_agent.py
-python structure_agent.py --prompt "我要生成10个194号空间群的NaBi结构，然后计算它的能带"
+python structure_agent.py --prompt "Generate 10 NaBi structures in space group 194, then calculate their band structures."
 ```
 
-### Windows 交互式使用
+### Interactive use on Windows
 
-在项目根目录激活 Conda 环境后执行一次可编辑安装：
+Activate the Conda environment in the project root and perform a one-time editable
+installation:
 
 ```powershell
 conda activate symmcd
 python -m pip install --no-deps --no-build-isolation -e .
 ```
 
-之后可在任意目录用下面的命令进入连续对话：
+You can then start a continuous conversation from any directory:
 
 ```text
 symmband
-symmband ➤ 生成10个194号空间群的BN结构
-symmband ➤ 给出生成的第三个结构的形成能和空间群
+symmband ➤ Generate 10 BN structures in space group 194.
+symmband ➤ Report the energy and space group of the third generated structure.
 ```
 
-生成期间会实时显示采样进度。每个通过验收的结构都会显示验收编号、MACE 总势能、
-每原子势能和实际空间群。这里的 MACE 势能不是严格热力学形成能；追问“形成能”时，
-Agent 会说明该限制并返回当前可用的 MACE 能量。输入 `/exit` 退出对话。
+Sampling progress is displayed in real time. Every accepted structure is reported with
+its acceptance number, total MACE potential energy, energy per atom, and recovered space
+group. A MACE potential energy is not a rigorous thermodynamic formation energy. If a
+user asks for a formation energy, the agent states this limitation and returns only the
+available MACE quantities. Enter `/exit` to leave the interactive session.
 
-Windows 默认使用 `MACE_DEVICE=cpu`，兼容性最好。如果改为 `cuda`，需要确保当前 PyTorch/CUDA
-环境包含匹配版本的 `nvrtc-builtins64_*.dll`；否则 MACE 弛豫会失败，但 SymmCD 生成阶段不受影响。
+Windows uses `MACE_DEVICE=cpu` by default for maximum compatibility. If you switch to
+`cuda`, the PyTorch/CUDA environment must contain a compatible
+`nvrtc-builtins64_*.dll`. Otherwise, MACE relaxation will fail, although the SymmCD
+generation stage remains unaffected.
 
-### 检索演生粒子百科
+### Querying the emergent-particle encyclopedia
 
-补充材料 Tables S1/S2 已预处理为本地索引。进入 `symmband` 后可以直接询问：
+Supplemental Tables S1/S2 have been preprocessed into a local index. After starting
+`symmband`, you can ask:
 
 ```text
-symmband ➤ 我想知道194号空间群考虑SOC时所有可能存在的演生粒子有哪些
+symmband ➤ Which emergent particles are allowed in space group 194 when SOC is included?
 ```
 
-Agent 会分别列出本征简并与偶然简并，并注明来源表和 PDF 页码。日常查询只读取
-`emergent particles/emergent_particles_index.json` 中对应空间群的一条记录，不会把 1228 页 PDF
-发送给大模型。只有补充材料更新时，才需要使用带有 `pypdf` 的环境重新构建索引：
+The agent reports essential and accidental degeneracies separately and cites the source
+table and PDF page. A normal query reads only the record for the requested space group
+from `emergent particles/emergent_particles_index.json`; it does not send the 1,228-page
+supplement to the language model. The index needs to be rebuilt in an environment with
+`pypdf` only when the supplemental material changes.
 
-还可以继续询问偶然简并所在的高对称路径，例如：
+You can also request the high-symmetry paths associated with accidental degeneracies:
 
 ```text
-symmband ➤ 给出216号空间群考虑SOC时的偶然简并及其高对称路径
+symmband ➤ List the accidental degeneracies and their high-symmetry paths for space group 216 with SOC.
 ```
 
-路径数据来自补充材料 S7B/S8B 的逐空间群表，并包含线路符号、端点和对应 PDF 页码。
+The path data come from the space-group-resolved tables in supplemental Sections S7B/S8B
+and include the line label, path endpoints, and source PDF page.
 
-### 分析已完成的能带结果
+### Analyzing completed band results
 
-将从集群取回的单个材料结果目录放入 `calculation_results/`，例如：
+Place one material-result directory retrieved from the cluster under
+`calculation_results/`, for example:
 
 ```text
 calculation_results/NaBi_sg186_007/
 ```
 
-结果中需要包含完成的 SOC line-mode VASP 作业（`vasprun.xml` 或 `vasprun.xml.gz`）、IRVSP
-输出 `outir` 和 `INCAR`。进入交互模式后可直接询问：
+The result must contain a completed SOC line-mode VASP job (`vasprun.xml` or
+`vasprun.xml.gz`), the IRVSP output `outir`, and `INCAR`. In an interactive session,
+ask:
 
 ```text
-symmband ➤ 分析NaBi结果中偶然简并都有哪些
+symmband ➤ Analyze the accidental degeneracies in the NaBi result.
 ```
 
-Agent 会自动定位材料目录和 band job，复现 band 图红圈使用的“小能隙局部极小值 + 相邻能带
-不可约表示对换”检测，把每个红圈映射到对应高对称路径，再与当前空间群及 SOC 条件下的
-补充材料 S2/S8B 索引比对，并输出逐路径百科允许粒子对照表。结果保存在：
+The agent locates the material directory and band job, reproduces the detector used for
+the red circles in the band plot—local small-gap minima plus adjacent-band irreducible-
+representation exchange—maps each hit to its high-symmetry path, and compares it with
+the supplemental S2/S8B index for the observed space group and SOC setting. The report
+is written to:
 
 ```text
 calculation_results/<result>/agent_analysis/accidental_degeneracy_report.json
 ```
 
-`confirmed_by_unique_path` 表示该路径在索引中只对应一种偶然简并；
-`path_compatible_ambiguous` 表示同一路径允许多种粒子，只能列为候选，不能仅凭一维能带路径
-唯一判断点、线或节线网。该过程读取本地 JSON 索引，不会把补充材料全文发送给大模型。
+`confirmed_by_unique_path` is a compatibility label meaning that only one indexed
+accidental-particle category matches that path. It is a path-taxonomy result, not proof
+of a topological phase. `path_compatible_ambiguous` means that multiple particle types
+share the path and must remain candidates; a one-dimensional band path alone cannot
+distinguish a point, line, or nodal-line network. This analysis uses the local JSON index
+and does not send the full supplemental material to the language model.
+
+Rebuild the encyclopedia index with:
 
 ```powershell
 python scripts/build_emergent_particle_index.py
 ```
 
-### 计算已有结构的 MACE 能量
+### Calculating a MACE energy for an existing structure
 
-把 CIF 或 POSCAR 放入 `input_structures/`，例如：
+Place a CIF or POSCAR file in `input_structures/`, for example:
 
 ```text
 input_structures/graphene.cif
 ```
 
-然后运行对话或单次命令：
+Then use either an interactive request or a one-shot command:
 
 ```bash
-python structure_agent.py --prompt "我要计算这个 graphene.cif 的能量"
+python structure_agent.py --prompt "Calculate the energy of graphene.cif."
 ```
 
-Agent 会对原始结构执行未弛豫的 MACE 单点计算，并输出总能量（eV）和每原子能量（eV/atom）。JSON 报告位于：
+The agent performs an unrelaxed MACE single-point calculation and reports the total
+energy in eV and energy per atom in eV/atom. The JSON report is written to:
 
 ```text
 calculation_results/mace_energy/<structure>_<timestamp>/mace_energy.json
 ```
 
-该数值是所配置 MACE 模型的势能预测，不是 DFT 能量、形成能或 `E_hull`。`E_hull` 需要同一化学体系的元素参考和竞争相能量来构造凸包，不能由单个结构的 MACE 总能量直接得到。
+This value is a potential-energy prediction from the configured MACE model. It is not a
+DFT energy, formation energy, or energy above hull (`E_hull`). Computing `E_hull`
+requires elemental reference states and competing-phase energies for the same chemical
+system; it cannot be inferred from the MACE total energy of a single structure.
 
-完整的 VASP、POTCAR、IRVSP 和 Slurm 配置见
-[`cluster_environment/README.md`](cluster_environment/README.md)。
+For the complete VASP, POTCAR, IRVSP, and Slurm configuration, see
+[`cluster_environment/README.md`](cluster_environment/README.md).
 
-## 输出
+## Outputs
 
-结构默认输出到：
+Generated structures are written by default to:
 
 ```text
 generated_structures/<formula>_sg<spacegroup>/run_<timestamp>/
 ```
 
-能带图片默认输出到对应任务的：
+Band images are written under the corresponding task directory:
 
 ```text
 band_analysis/bands/band_*.png
 ```
 
-如果设置 `BAND_OUTPUT_ROOT`，图片会写入：
+If `BAND_OUTPUT_ROOT` is configured, images are written to:
 
 ```text
 <BAND_OUTPUT_ROOT>/<formula>_sg<spacegroup>/run_<timestamp>/bands/
 ```
 
-“生成 10 个”表示执行 10 次扩散采样。只有通过最终元素和空间群验收的结构才进入 VASP，所以图片数量可能少于 10。
+“Generate 10” means that the workflow performs 10 diffusion samples. Only structures
+that pass the final element and recovered-space-group checks enter VASP, so fewer than
+10 band images may be produced.
 
-## 上传 GitHub
+## Publishing to GitHub
 
-`epoch699.ckpt` 约 725 MB，超过 GitHub 普通 Git 的 100 MiB 单文件限制，必须使用 Git LFS。项目已经在 `.gitattributes` 中配置好模型规则。
+`epoch699.ckpt` is approximately 725 MB and exceeds GitHub's standard 100 MiB per-file
+limit. It must be stored with Git LFS. The required model patterns are already present
+in `.gitattributes`.
 
-发布前先运行自动审计：
+Run the automated release audit before publishing:
 
 ```bash
 python scripts/release_audit.py
 ```
 
-Windows PowerShell：
+On Windows PowerShell:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\prepare_github.ps1
 ```
 
-Linux/macOS/Git Bash：
+On Linux, macOS, or Git Bash:
 
 ```bash
 bash scripts/prepare_github.sh
 ```
 
-检查 LFS 和暂存内容后提交：
+After reviewing the LFS objects and staged files, commit and publish:
 
 ```bash
 git status --short
@@ -234,22 +266,29 @@ git commit -m "Initial SymmBand-Agent monorepo"
 gh repo create SymmBand-Agent --source=. --private --push
 ```
 
-如果没有安装 GitHub CLI，先在 GitHub 网页创建一个空的私有仓库，然后执行：
+If GitHub CLI is unavailable, create an empty private repository on GitHub and run:
 
 ```bash
 git remote add origin https://github.com/<YOUR_ACCOUNT>/SymmBand-Agent.git
 git push -u origin main
 ```
 
-首次建议创建私有仓库。确认 `THIRD_PARTY_NOTICES.md` 中提到的 SymmCD、能带代码和模型权利后，再决定是否公开。
+A private repository is recommended initially. Review the rights for SymmCD, the band
+workflow, and the models referenced in `THIRD_PARTY_NOTICES.md` before making the
+repository public.
 
-## 安全与版本控制
+## Security and version control
 
-- `.env.agent`、API key、POTCAR、VASP 输出、生成结构和 band 结果均被 `.gitignore` 排除。
-- 仓库只保留 Pydantic AI 运行所需的两个包，并完整保留其 MIT 许可证。
-- 克隆仓库前需要安装 Git LFS，然后执行 `git lfs pull` 获取模型文件。
-- 不要将 POTCAR 上传到 GitHub。
+- `.env.agent`, API keys, POTCAR files, VASP outputs, generated structures, and band
+  results are excluded by `.gitignore`.
+- The repository retains only the two Pydantic AI packages required at runtime and
+  preserves their complete MIT license text.
+- Install Git LFS before cloning, then run `git lfs pull` to retrieve model files.
+- Never upload POTCAR files to GitHub.
 
-## 许可证
+## License
 
-Pydantic AI 的 MIT 许可证保存在 `vendor/pydantic-ai/`。其余代码与模型在原目录中没有附带许可证；公开仓库前请先确认并补充相应授权。详见 `THIRD_PARTY_NOTICES.md`。
+The Pydantic AI MIT license is preserved under `vendor/pydantic-ai/`. The remaining code
+and models did not include licenses in their original directories. Confirm and add the
+appropriate permissions before public redistribution. See
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for details.
