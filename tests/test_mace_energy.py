@@ -1,4 +1,6 @@
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -23,6 +25,24 @@ class ConstantEnergyCalculator(Calculator):
 
 
 class MaceEnergyTests(unittest.TestCase):
+    def test_module_import_does_not_eagerly_load_mace_or_torchvision(self):
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                (
+                    "import sys; import mace_energy; "
+                    "assert 'mace.calculators' not in sys.modules; "
+                    "assert 'torchvision' not in sys.modules"
+                ),
+            ],
+            cwd=Path(__file__).resolve().parents[1],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+
     def test_cif_single_point_energy_and_json_report(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

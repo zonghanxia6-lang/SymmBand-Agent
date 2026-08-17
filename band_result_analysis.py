@@ -12,6 +12,12 @@ from pathlib import Path
 from typing import Any
 
 from emergent_particles import DEFAULT_INDEX_PATH, EmergentParticle, lookup_emergent_particles
+from physics_evidence import (
+    PhysicsEvidenceAssessment,
+    build_band_evidence_assessment,
+    crossing_diagnostics,
+    validate_analysis_parameters,
+)
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -39,6 +45,12 @@ class AccidentalCrossing:
     band_indices: tuple[int, int]
     irreps_swapped: tuple[str, str]
     energy_relative_to_fermi_ev: float
+    energy_reference: str
+    minimum_gap_ev: float | None
+    neighboring_gaps_ev: tuple[float, float] | None
+    gap_to_tolerance_ratio: float | None
+    threshold_margin: str
+    fermi_proximity: str
     classification: str
     candidates: list[ParticlePathCandidate]
 
@@ -77,6 +89,9 @@ class BandAccidentalDegeneracyReport:
     energy_window_ev: float
     gap_tolerance_ev: float
     crossing_count: int
+    electronic_converged: bool | None
+    line_path_kpoint_count: int | None
+    path_unique_particle_types: list[str]
     confirmed_particle_types: list[str]
     path_compatible_particle_types: list[str]
     path_summaries: list[PathMatchSummary]
@@ -89,6 +104,7 @@ class BandAccidentalDegeneracyReport:
     source_path_section: str
     report_file: str
     scientific_scope: str
+    evidence_assessment: PhysicsEvidenceAssessment
 
 
 def _normalized_name(value: str) -> str:
@@ -297,6 +313,7 @@ def analyze_band_result(
     image_path: Path | None = None,
     generate_image: bool = True,
 ) -> BandAccidentalDegeneracyReport:
+    validate_analysis_parameters(energy_window_ev, gap_tolerance_ev)
     result_dir = find_result_directory(result_name, results_root)
     if band_job_directory is None:
         job_dir = _locate_band_job(result_dir)
@@ -331,6 +348,11 @@ def analyze_band_result(
 
     crossings: list[AccidentalCrossing] = []
     for number, raw in enumerate(raw_crossings, start=1):
+        diagnostics = crossing_diagnostics(
+            raw,
+            energy_window_ev=energy_window_ev,
+            gap_tolerance_ev=gap_tolerance_ev,
+        )
         branch = _branch_for_crossing(analyzer.bs.branches, raw)
         candidates = match_accidental_particles(branch["name"], encyclopedia.accidental)
         if len(candidates) == 1:
@@ -350,6 +372,12 @@ def analyze_band_result(
                 band_indices=tuple(raw["band_indices"]),
                 irreps_swapped=tuple(raw["irreps_swapped"]),
                 energy_relative_to_fermi_ev=round(float(raw["energy_approx"]), 6),
+                energy_reference=diagnostics["energy_reference"],
+                minimum_gap_ev=diagnostics["minimum_gap_ev"],
+                neighboring_gaps_ev=diagnostics["neighboring_gaps_ev"],
+                gap_to_tolerance_ratio=diagnostics["gap_to_tolerance_ratio"],
+                threshold_margin=diagnostics["threshold_margin"],
+                fermi_proximity=diagnostics["fermi_proximity"],
                 classification=classification,
                 candidates=candidates,
             )
@@ -389,6 +417,18 @@ def analyze_band_result(
     report_path = report_path or (
         result_dir / "agent_analysis" / "accidental_degeneracy_report.json"
     )
+    run = getattr(analyzer, "run", None)
+    electronic_converged = getattr(run, "converged_electronic", None)
+    electronic_converged = (
+        bool(electronic_converged) if electronic_converged is not None else None
+    )
+    kpoints = getattr(analyzer.bs, "kpoints", None)
+    line_path_kpoint_count = len(kpoints) if kpoints is not None else None
+    evidence_assessment = build_band_evidence_assessment(
+        crossings,
+        electronic_converged=electronic_converged,
+        kpoint_count=line_path_kpoint_count,
+    )
     report = BandAccidentalDegeneracyReport(
         result_name=result_dir.name,
         result_directory=str(result_dir),
@@ -401,6 +441,9 @@ def analyze_band_result(
         energy_window_ev=energy_window_ev,
         gap_tolerance_ev=gap_tolerance_ev,
         crossing_count=len(crossings),
+        electronic_converged=electronic_converged,
+        line_path_kpoint_count=line_path_kpoint_count,
+        path_unique_particle_types=confirmed,
         confirmed_particle_types=confirmed,
         path_compatible_particle_types=compatible,
         path_summaries=summaries,
@@ -413,10 +456,11 @@ def analyze_band_result(
         source_path_section=encyclopedia.path_source_section,
         report_file=str(report_path.resolve()),
         scientific_scope=(
-            "A unique path match identifies an encyclopedia particle type within the indexed "
-            "high-symmetry-line classification. Multiple types on one path remain candidates; "
-            "a one-dimensional band path alone cannot distinguish point, line, and line-net topology."
+            "A unique path match identifies only an encyclopedia path taxonomy. Every detector hit "
+            "remains a symmetry-supported candidate: a one-dimensional path cannot establish exact "
+            "gap closure, point/line dimensionality, topological charge, or a bulk topological phase."
         ),
+        evidence_assessment=evidence_assessment,
     )
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(

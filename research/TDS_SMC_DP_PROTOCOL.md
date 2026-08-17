@@ -92,7 +92,7 @@ steps, MACE budget, and DFT budget identical between arms.
 The conversational equivalent is:
 
 ```text
-pydantic > 生成64个可能具有DP的194号空间群BiTe结构
+symmband > 生成64个可能具有DP的194号空间群BiTe结构
 ```
 
 The Agent uses the validated DP model by default. A DNL request fails explicitly

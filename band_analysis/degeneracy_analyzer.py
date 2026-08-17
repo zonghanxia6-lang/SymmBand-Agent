@@ -86,11 +86,14 @@ class DegeneracyAnalyzer:
                                 
                                 crossings.append({
                                     'k_interval': (knum_prev, knum_next),
+                                    'minimum_kpoint_number': knum_k,
                                     'k1_coords': outir_data[knum_prev]['k_coord'],
                                     'k2_coords': outir_data[knum_next]['k_coord'],
                                     'band_indices': (bnd_L, bnd_U),
                                     'irreps_swapped': (rep_prev_L, rep_prev_U),
-                                    'energy_approx': e_approx
+                                    'energy_approx': e_approx,
+                                    'minimum_gap_ev': gap_k,
+                                    'neighboring_gaps_ev': (gap_prev, gap_next),
                                 })
                                 
                                 logger.info(

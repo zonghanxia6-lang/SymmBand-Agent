@@ -8,7 +8,7 @@ required by the software and local scientific data that must not be published.
 Start the interactive agent with:
 
 ```bash
-pydantic
+symmband
 ```
 
 The Pydantic AI layer converts natural-language requests into validated typed tool

@@ -8,7 +8,7 @@
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      width="2400" height="1900" viewBox="0 0 2400 1900" role="img" aria-labelledby="agent-integrated-title agent-integrated-desc">
   <title id="agent-integrated-title">SymmBand-Agent integrated topological-material discovery workflow</title>
-  <desc id="agent-integrated-desc">A conversational Pydantic AI orchestration layer controls frozen-checkpoint particle-guided SymmCD generation with TDS-inspired sequential Monte Carlo, MACE energy and relaxation, electronic band calculations, and local emergent-particle knowledge retrieval.</desc>
+  <desc id="agent-integrated-desc">A conversational Pydantic AI orchestration layer routes validated requests into the unchanged four-stage workflow for SymmCD structure generation, MACE relaxation, electronic band calculations, and topological-result analysis with local encyclopedia retrieval.</desc>
 
   <defs>
     <style>
@@ -99,8 +99,8 @@
       <rect x="42" y="326" width="9" height="116" rx="4.5" fill="#0072B2"/>
     </g>
     <text x="72" y="355" class="a-chip" fill="#0072B2">01  GENERATE</text>
-    <text x="72" y="389" class="a-card-title">Frozen SymmCD + SMC</text>
-    <text x="72" y="417" class="a-small">formula / SG / DP-DNL / count</text>
+    <text x="72" y="389" class="a-card-title">SymmCD structure generation</text>
+    <text x="72" y="417" class="a-small">formula · space group · count</text>
     <path d="M277 442V492" class="a-dash" stroke="#0072B2"/>
 
     <g filter="url(#agent-shadow)">
@@ -108,8 +108,8 @@
       <rect x="540" y="326" width="9" height="116" rx="4.5" fill="#009E73"/>
     </g>
     <text x="570" y="355" class="a-chip" fill="#009E73">02  RELAX + ENERGY</text>
-    <text x="570" y="389" class="a-card-title">MACE</text>
-    <text x="570" y="417" class="a-small">CIF/POSCAR · Eform · actual SG</text>
+    <text x="570" y="389" class="a-card-title">MACE potential</text>
+    <text x="570" y="417" class="a-small">CIF/POSCAR · energy · actual SG</text>
     <path d="M755 442V492" class="a-dash" stroke="#009E73"/>
 
     <g filter="url(#agent-shadow)">
@@ -125,9 +125,9 @@
       <rect x="1716" y="326" width="642" height="116" rx="22" fill="#FFFFFF" stroke="#A64D9B" stroke-width="2.5"/>
       <rect x="1716" y="326" width="9" height="116" rx="4.5" fill="#A64D9B"/>
     </g>
-    <text x="1746" y="355" class="a-chip" fill="#A64D9B">04  RETRIEVE + EXPLAIN</text>
-    <text x="1746" y="389" class="a-card-title">Local encyclopedia index</text>
-    <text x="1746" y="417" class="a-small">particles · type · high-symmetry path</text>
+    <text x="1746" y="355" class="a-chip" fill="#A64D9B">04  ANALYZE + EXPLAIN</text>
+    <text x="1746" y="389" class="a-card-title">Band results + encyclopedia</text>
+    <text x="1746" y="417" class="a-small">crossings · paths · sourced comparison</text>
     <path d="M2037 442V492" class="a-dash" stroke="#A64D9B"/>
 
 
@@ -2130,90 +2130,5 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
-
-  <g id="conditional-generation-overlay">
-    <rect x="43" y="39" width="468" height="1313" rx="27" fill="#F5FAFD" stroke="#B9DCEB" stroke-width="2"/>
-    <circle cx="88" cy="90" r="28" fill="#0072B2"/>
-    <text x="88" y="100" text-anchor="middle" class="stage-no">1</text>
-    <text x="130" y="82" class="stage-title">Crystal generation</text>
-    <text x="130" y="108" class="stage-sub">particle-guided, symmetry-constrained</text>
-
-    <rect x="76" y="145" width="402" height="166" rx="18" fill="#FFFFFF" stroke="#83C2DF" stroke-width="2" filter="url(#shadow)"/>
-    <text x="100" y="178" class="card-title">Multi-objective request</text>
-    <rect x="100" y="194" width="105" height="53" rx="11" fill="#E1F1F8"/>
-    <text x="112" y="215" class="tiny">Formula</text><text x="112" y="237" class="mono">BiTe</text>
-    <rect x="215" y="194" width="100" height="53" rx="11" fill="#E1F1F8"/>
-    <text x="227" y="215" class="tiny">Space group</text><text x="227" y="237" class="mono">194</text>
-    <rect x="325" y="194" width="129" height="53" rx="11" fill="#E9F7F2" stroke="#75C7AA"/>
-    <text x="337" y="215" class="tiny">Target particle</text><text x="337" y="237" class="mono">DP</text>
-    <text x="100" y="274" class="small">Agent validates formula, SG, particle type and count</text>
-    <rect x="100" y="284" width="354" height="18" rx="9" fill="#E7F4FA"/>
-    <text x="277" y="298" text-anchor="middle" class="tiny">Generate 64 DP-enriched structures in SG 194</text>
-
-    <path d="M277 317V337" class="arrow-blue"/>
-    <rect x="76" y="345" width="402" height="225" rx="19" fill="#FFFFFF" stroke="#56B4E9" stroke-width="2.5" filter="url(#shadow)"/>
-    <rect x="76" y="345" width="402" height="49" rx="19" fill="#D9EEF8"/><rect x="76" y="376" width="402" height="18" fill="#D9EEF8"/>
-    <text x="100" y="378" class="card-title">Frozen SymmCD</text>
-    <rect x="350" y="356" width="104" height="25" rx="12.5" fill="#0072B2"/>
-    <text x="402" y="374" text-anchor="middle" class="tiny" style="fill:#FFFFFF">epoch699 fixed</text>
-    <text x="100" y="426" class="label">64 parallel reverse-diffusion particles</text>
-    <text x="100" y="452" class="small">atom types locked to formula; SG condition retained</text>
-    <g transform="translate(100,470)">
-      <path d="M0 22 C42 -5,76 50,118 22 S194 -5,236 22 S310 50,354 22" fill="none" stroke="#B9DCEB" stroke-width="3"/>
-      <path d="M0 42 C42 12,76 69,118 42 S194 12,236 42 S310 69,354 42" fill="none" stroke="#56B4E9" stroke-width="3"/>
-      <path d="M0 62 C42 35,76 88,118 62 S194 35,236 62 S310 88,354 62" fill="none" stroke="#0072B2" stroke-width="3"/>
-      <circle cx="0" cy="22" r="5" fill="#B9DCEB"/><circle cx="354" cy="22" r="5" fill="#B9DCEB"/>
-      <circle cx="0" cy="42" r="5" fill="#56B4E9"/><circle cx="354" cy="42" r="5" fill="#56B4E9"/>
-      <circle cx="0" cy="62" r="5" fill="#0072B2"/><circle cx="354" cy="62" r="5" fill="#0072B2"/>
-    </g>
-    <text x="277" y="555" text-anchor="middle" class="tiny">asymmetric-unit coordinates + lattice + site symmetry</text>
-
-    <path d="M277 577V597" class="arrow-blue"/>
-    <rect x="76" y="605" width="402" height="174" rx="18" fill="#FFFFFF" stroke="#75C7AA" stroke-width="2" filter="url(#shadow)"/>
-    <circle cx="111" cy="645" r="22" fill="#D7F1E8" stroke="#009E73" stroke-width="2"/>
-    <text x="111" y="652" text-anchor="middle" class="label" fill="#007A59">DP</text>
-    <text x="145" y="638" class="card-title">Particle surrogate</text>
-    <text x="145" y="662" class="small">97 positives + 137 SG-compatible hard negatives</text>
-    <rect x="100" y="688" width="164" height="35" rx="17.5" fill="#E9F7F2"/>
-    <text x="182" y="711" text-anchor="middle" class="tiny">OOF PR-AUC 0.678</text>
-    <rect x="274" y="688" width="180" height="35" rx="17.5" fill="#E9F7F2"/>
-    <text x="364" y="711" text-anchor="middle" class="tiny">EF@20% = 1.745</text>
-    <text x="100" y="751" class="small">Scores projected structures: P(DP | candidate)</text>
-    <text x="100" y="770" class="tiny">Group-held-out gate passed; SG194 EF = 1.956</text>
-
-    <path d="M277 786V806" class="arrow-blue"/>
-    <rect x="76" y="814" width="402" height="224" rx="19" fill="#FFFFFF" stroke="#0072B2" stroke-width="2.5" filter="url(#shadow)"/>
-    <text x="100" y="848" class="card-title">TDS-inspired SMC twisting</text>
-    <text x="100" y="874" class="small">Gradual guidance over the final 50% of 500 steps</text>
-    <g transform="translate(100,895)">
-      <line x1="0" y1="24" x2="354" y2="24" stroke="#B9DCEB" stroke-width="8" stroke-linecap="round"/>
-      <line x1="177" y1="24" x2="354" y2="24" stroke="#0072B2" stroke-width="8" stroke-linecap="round"/>
-      <circle cx="0" cy="24" r="8" fill="#B9DCEB"/><circle cx="177" cy="24" r="8" fill="#56B4E9"/><circle cx="354" cy="24" r="8" fill="#0072B2"/>
-      <text x="0" y="53" text-anchor="middle" class="tiny">beta 0</text><text x="177" y="53" text-anchor="middle" class="tiny">start scoring</text><text x="354" y="53" text-anchor="middle" class="tiny">beta 3</text>
-    </g>
-    <rect x="100" y="964" width="166" height="48" rx="12" fill="#E7F4FA"/>
-    <text x="183" y="984" text-anchor="middle" class="tiny">score every 25 steps</text><text x="183" y="1003" text-anchor="middle" class="tiny">incremental weights</text>
-    <path d="M267 988H286" class="arrow-blue"/>
-    <rect x="296" y="964" width="158" height="48" rx="12" fill="#FFF3DF" stroke="#E69F00"/>
-    <text x="375" y="984" text-anchor="middle" class="tiny">ESS &lt; 0.8 N</text><text x="375" y="1003" text-anchor="middle" class="tiny">systematic resample</text>
-    <text x="277" y="1029" text-anchor="middle" class="tiny">copy coordinates, lattice, atom and site-symmetry states</text>
-
-    <path d="M277 1045V1065" class="arrow-blue"/>
-    <rect x="76" y="1073" width="402" height="190" rx="18" fill="#FFFFFF" stroke="#83C2DF" stroke-width="2" filter="url(#shadow)"/>
-    <text x="100" y="1107" class="card-title">Condition-valid candidate pool</text>
-    <g transform="translate(101,1125)">
-      <circle cx="8" cy="8" r="8" fill="#D7F1E8"/><path d="M4 8l3 3 6-7" fill="none" stroke="#009E73" stroke-width="2"/><text x="26" y="13" class="small">composition retained</text>
-      <circle cx="8" cy="38" r="8" fill="#D7F1E8"/><path d="M4 38l3 3 6-7" fill="none" stroke="#009E73" stroke-width="2"/><text x="26" y="43" class="small">actual SG = requested SG</text>
-      <circle cx="8" cy="68" r="8" fill="#D7F1E8"/><path d="M4 68l3 3 6-7" fill="none" stroke="#009E73" stroke-width="2"/><text x="26" y="73" class="small">valid geometry + ranked DP proxy</text>
-    </g>
-    <rect x="100" y="1214" width="354" height="35" rx="17.5" fill="#0072B2"/>
-    <text x="277" y="1237" text-anchor="middle" class="small" fill="#FFFFFF">CIF / POSCAR + probabilities + SMC audit trail</text>
-
-    <rect x="76" y="1281" width="402" height="48" rx="13" fill="#FFF3DF" stroke="#E69F00"/>
-    <text x="277" y="1302" text-anchor="middle" class="small">Proxy enrichment is not topology confirmation</text>
-    <text x="277" y="1321" text-anchor="middle" class="tiny">SOC DFT + IRVSP remain required downstream</text>
-    <path d="M478 1168H520V684H531" class="arrow"/>
-  </g>
-
   </g>
 </svg>

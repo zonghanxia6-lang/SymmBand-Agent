@@ -241,6 +241,12 @@ class AccidentalCrossingItem(BaseModel):
     band_indices: tuple[int, int]
     irreps_swapped: tuple[str, str]
     energy_relative_to_fermi_ev: float
+    energy_reference: str
+    minimum_gap_ev: float | None
+    neighboring_gaps_ev: tuple[float, float] | None
+    gap_to_tolerance_ratio: float | None
+    threshold_margin: str
+    fermi_proximity: str
     classification: str
     candidates: list[ParticlePathCandidateItem]
 
@@ -262,6 +268,22 @@ class EncyclopediaPathComparisonItem(BaseModel):
     source_pdf_page: int
 
 
+class PhysicsQualityCheckItem(BaseModel):
+    name: str
+    status: str
+    evidence: str
+    consequence: str
+
+
+class PhysicsEvidenceAssessmentItem(BaseModel):
+    evidence_level: str
+    conclusion: str
+    claim_boundary: str
+    quality_checks: list[PhysicsQualityCheckItem]
+    limitations: list[str]
+    recommended_validations: list[str]
+
+
 class BandAccidentalDegeneracyReport(BaseModel):
     result_name: str
     result_directory: str
@@ -274,6 +296,9 @@ class BandAccidentalDegeneracyReport(BaseModel):
     energy_window_ev: float
     gap_tolerance_ev: float
     crossing_count: int
+    electronic_converged: bool | None
+    line_path_kpoint_count: int | None
+    path_unique_particle_types: list[str]
     confirmed_particle_types: list[str]
     path_compatible_particle_types: list[str]
     path_summaries: list[PathMatchSummaryItem]
@@ -286,6 +311,7 @@ class BandAccidentalDegeneracyReport(BaseModel):
     source_path_section: str
     report_file: str
     scientific_scope: str
+    evidence_assessment: PhysicsEvidenceAssessmentItem
 
 
 @dataclass
@@ -323,7 +349,8 @@ class AgentDependencies:
 
 
 GENERATION_INSTRUCTIONS = """
-你是一个晶体结构生成、MACE 能量与能带计算助手。把用户的自然语言请求转换为严格的工具参数。
+你是一个重视证据边界的凝聚态物理分析与晶体计算助手。把用户的自然语言请求转换为严格的工具参数，
+并基于工具证据给出可复核的物理结论。
 
 规则：
 1. 提取规范化学式、1 到 230 的空间群号，以及用户明确要求的采样数。
@@ -356,9 +383,11 @@ GENERATION_INSTRUCTIONS = """
     analyze_calculated_band_accidental_degeneracies，result_name 传材料名或结果目录名，不要重新计算能带，
     也不要仅调用百科查询工具。该工具会自动定位 calculation_results 下的结果、复现 band 图红圈使用的
     表示对换检测，并与对应空间群和 SOC 模式的百科路径索引比对。
-18. 对结果判定必须区分 classification：confirmed_by_unique_path 表示该高对称路径在索引中只匹配一种
-    accidental 粒子，可报告为路径唯一确认；path_compatible_ambiguous 表示同一路径对应多种粒子，只能列为
+18. 对结果判定必须区分 classification：confirmed_by_unique_path 这个兼容字段只表示该高对称路径在百科
+    分类中唯一匹配一种 accidental 粒子，可报告为“路径分类唯一候选”，绝不能说拓扑已确认；
+    path_compatible_ambiguous 表示同一路径对应多种粒子，只能列为
     路径相容候选，不能擅自唯一命名；not_indexed_for_this_path 表示检测到表示对换但索引无对应路径。
+    报告粒子汇总时优先使用 path_unique_particle_types；confirmed_particle_types 仅为旧接口兼容别名。
 19. 回答结果分析时先汇总空间群、SOC、红圈/表示对换总数，再按高对称路径列出数量、候选粒子。在该汇总表
     后必须单独输出“百科全书高对称路径对照表”，逐行完整展示 encyclopedia_path_table，不得合并或省略行；
     表格列至少包括高对称路径、线标、红圈数、百科允许粒子缩写、英文名称、匹配结论和补充材料 PDF 页码。
@@ -368,6 +397,16 @@ GENERATION_INSTRUCTIONS = """
     generate_particle_guided_structures。particle 必须是 DP 或 DNL；样本数传给 num_particles。
 22. 粒子引导结果是冻结 SymmCD checkpoint 的 TDS-inspired SMC 筛选结果，不是拓扑确认。
     必须报告代理概率范围、有效结构数、目标空间群保持数和输出目录，并说明仍需 SOC DFT/IRVSP 验证。
+23. 所有物理回答执行统一证据协议：先给结论及证据等级，再列直接数值证据、假设/适用条件、局限和下一步
+    验证。严格区分“工具直接输出”“由输出推断”“尚未计算”；证据不足时降低结论强度，不用常识补齐数据。
+24. 每个数值必须保留单位和参考量。能带能量必须说明是 E-E_F；区分总能、每原子能、形成能、自由能和
+    energy above hull。没有元素参考态/竞争相凸包时不得声称形成能或热力学稳定性。
+25. 分析 crossing 时必须报告 minimum_gap_ev、gap_to_tolerance_ratio、threshold_margin、相对费米能量和电子
+    收敛状态。有限 k 网格上的小能隙不是严格零能隙；阈值命中是候选证据，不是精确简并证明。
+26. 必须逐字遵守 evidence_assessment.claim_boundary，并报告 evidence_level、失败或缺失的 quality_checks、
+    limitations 与最关键的 recommended_validations。不能把路径唯一、表示对换或红圈表述为拓扑相确认。
+27. 对一般物理问题，明确体系、哈密顿量/近似、边界条件、温度/压力、SOC/磁序等必要前提；若前提不同会
+    改变答案，给条件化结论。优先用对称性、守恒律、量纲和极限情形交叉检查推理。
 """.strip()
 
 
@@ -758,7 +797,7 @@ async def _run_interactive_cli(
 
     while True:
         try:
-            prompt = await session.prompt_async("pydantic ➤ ")
+            prompt = await session.prompt_async("symmband ➤ ")
         except EOFError:
             return
         except KeyboardInterrupt:

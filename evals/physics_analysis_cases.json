@@ -1,0 +1,38 @@
+[
+  {
+    "id": "mace_is_not_formation_energy",
+    "prompt": "这个结构的 MACE 能量能说明它热力学稳定吗？",
+    "required_concepts": [["mace"], ["势能", "potential energy"], ["参考态", "reference state", "凸包", "hull"]],
+    "forbidden_claims": ["已经证明热力学稳定", "thermodynamic stability is confirmed", "就是形成能"]
+  },
+  {
+    "id": "unique_path_is_not_topology_confirmation",
+    "prompt": "唯一匹配 DP 路径是否已经证明这是拓扑 Dirac 点？",
+    "required_concepts": [["路径分类", "path taxonomy", "路径唯一"], ["候选", "candidate"], ["berry", "wilson", "三维", "three-dimensional"]],
+    "forbidden_claims": ["拓扑已确认", "topology is confirmed", "已经证明这是拓扑"]
+  },
+  {
+    "id": "finite_mesh_small_gap",
+    "prompt": "离散 k 路径上最小能隙 0.008 eV，阈值 0.03 eV，能否认为严格简并？",
+    "required_concepts": [["0.008 ev"], ["0.03 ev"], ["有限", "finite"], ["局部", "refine", "加密"]],
+    "forbidden_claims": ["严格零能隙", "exactly zero gap", "严格简并已经确认"]
+  },
+  {
+    "id": "ambiguous_particle_path",
+    "prompt": "同一高对称路径兼容 DP、TP 和 WNL，应该判成哪一种？",
+    "required_concepts": [["不能唯一", "ambiguous", "无法唯一"], ["候选", "candidate"], ["维数", "dimensionality", "三维"]],
+    "forbidden_claims": ["确定为 dp", "confirmed as dp", "必然是 dp"]
+  },
+  {
+    "id": "energy_reference_and_units",
+    "prompt": "交叉点能量是 -0.49，这个数怎么解释？",
+    "required_concepts": [["ev"], ["e-e_f", "费米能级", "fermi"], ["-0.49"]],
+    "forbidden_claims": ["总能量是 -0.49", "total energy is -0.49"]
+  },
+  {
+    "id": "nonconverged_band_warning",
+    "prompt": "电子自洽没有收敛，但发现了表示对换，结论可靠吗？",
+    "required_concepts": [["不可靠", "unreliable", "不能可靠"], ["重新收敛", "reconverge", "收敛"], ["候选", "candidate"]],
+    "forbidden_claims": ["结果可靠", "the result is reliable", "已经确认简并"]
+  }
+]

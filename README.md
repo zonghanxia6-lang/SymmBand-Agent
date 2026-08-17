@@ -92,9 +92,9 @@ python -m pip install --no-deps --no-build-isolation -e .
 之后可在任意目录用下面的命令进入连续对话：
 
 ```text
-pydantic
-pydantic ➤ 生成10个194号空间群的BN结构
-pydantic ➤ 给出生成的第三个结构的形成能和空间群
+symmband
+symmband ➤ 生成10个194号空间群的BN结构
+symmband ➤ 给出生成的第三个结构的形成能和空间群
 ```
 
 生成期间会实时显示采样进度。每个通过验收的结构都会显示验收编号、MACE 总势能、
@@ -106,10 +106,10 @@ Windows 默认使用 `MACE_DEVICE=cpu`，兼容性最好。如果改为 `cuda`�
 
 ### 检索演生粒子百科
 
-补充材料 Tables S1/S2 已预处理为本地索引。进入 `pydantic` 后可以直接询问：
+补充材料 Tables S1/S2 已预处理为本地索引。进入 `symmband` 后可以直接询问：
 
 ```text
-pydantic ➤ 我想知道194号空间群考虑SOC时所有可能存在的演生粒子有哪些
+symmband ➤ 我想知道194号空间群考虑SOC时所有可能存在的演生粒子有哪些
 ```
 
 Agent 会分别列出本征简并与偶然简并，并注明来源表和 PDF 页码。日常查询只读取
@@ -119,7 +119,7 @@ Agent 会分别列出本征简并与偶然简并，并注明来源表和 PDF 页
 还可以继续询问偶然简并所在的高对称路径，例如：
 
 ```text
-pydantic ➤ 给出216号空间群考虑SOC时的偶然简并及其高对称路径
+symmband ➤ 给出216号空间群考虑SOC时的偶然简并及其高对称路径
 ```
 
 路径数据来自补充材料 S7B/S8B 的逐空间群表，并包含线路符号、端点和对应 PDF 页码。
@@ -136,7 +136,7 @@ calculation_results/NaBi_sg186_007/
 输出 `outir` 和 `INCAR`。进入交互模式后可直接询问：
 
 ```text
-pydantic ➤ 分析NaBi结果中偶然简并都有哪些
+symmband ➤ 分析NaBi结果中偶然简并都有哪些
 ```
 
 Agent 会自动定位材料目录和 band job，复现 band 图红圈使用的“小能隙局部极小值 + 相邻能带

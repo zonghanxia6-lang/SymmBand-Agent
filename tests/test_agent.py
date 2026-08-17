@@ -33,8 +33,10 @@ class AgentTests(unittest.TestCase):
         class FakeSession:
             def __init__(self):
                 self.prompts = iter(["第一轮", "第二轮", "/exit"])
+                self.prompt_labels = []
 
-            async def prompt_async(self, _prompt):
+            async def prompt_async(self, prompt):
+                self.prompt_labels.append(prompt)
                 return next(self.prompts)
 
         class FakeConsole:
@@ -76,6 +78,7 @@ class AgentTests(unittest.TestCase):
 
         self.assertEqual(fake_agent.calls[0][1], [])
         self.assertEqual(fake_agent.calls[1][1], ["history-1"])
+        self.assertEqual(fake_session.prompt_labels, ["symmband ➤ "] * 3)
         processing_lines = [line for line in fake_console.output if "正在处理请求" in line]
         self.assertEqual(len(processing_lines), 2)
         self.assertEqual(sum("回答1" in line for line in fake_console.output), 1)
@@ -516,6 +519,9 @@ class AgentTests(unittest.TestCase):
                 energy_window_ev=1.0,
                 gap_tolerance_ev=0.03,
                 crossing_count=9,
+                electronic_converged=True,
+                line_path_kpoint_count=285,
+                path_unique_particle_types=["DP"],
                 confirmed_particle_types=["DP"],
                 path_compatible_particle_types=["DP", "TP", "WNL", "WNL net"],
                 path_summaries=[],
@@ -538,6 +544,21 @@ class AgentTests(unittest.TestCase):
                 source_path_section="S8B",
                 report_file="accidental_degeneracy_report.json",
                 scientific_scope="Path-only classification scope.",
+                evidence_assessment=structure_agent.PhysicsEvidenceAssessmentItem(
+                    evidence_level="L3_path_taxonomy_unique_symmetry_candidate",
+                    conclusion="Detected symmetry-supported candidates.",
+                    claim_boundary="Do not state that topology is confirmed.",
+                    quality_checks=[
+                        structure_agent.PhysicsQualityCheckItem(
+                            name="electronic_convergence",
+                            status="pass",
+                            evidence="vasprun reports convergence",
+                            consequence="No convergence warning.",
+                        )
+                    ],
+                    limitations=["One-dimensional path only."],
+                    recommended_validations=["Compute a Berry phase."],
+                ),
             )
 
         def model_function(messages, _info):
@@ -551,7 +572,9 @@ class AgentTests(unittest.TestCase):
                         )
                     ]
                 )
-            return ModelResponse(parts=[TextPart("NaBi结果中确认DP，并有TP/WNL/WNL net路径候选。")])
+            return ModelResponse(
+                parts=[TextPart("NaBi结果中有路径分类唯一的DP候选，并有TP/WNL/WNL net路径候选；拓扑尚未确认。")]
+            )
 
         deps = structure_agent.AgentDependencies(
             checkpoint_path=Path("epoch699.ckpt").resolve(),
@@ -569,7 +592,10 @@ class AgentTests(unittest.TestCase):
         ):
             result = agent.run_sync("分析NaBi结果中偶然简并都有哪些", deps=deps)
 
-        self.assertEqual(result.output, "NaBi结果中确认DP，并有TP/WNL/WNL net路径候选。")
+        self.assertEqual(
+            result.output,
+            "NaBi结果中有路径分类唯一的DP候选，并有TP/WNL/WNL net路径候选；拓扑尚未确认。",
+        )
         self.assertEqual(len(captured), 1)
         self.assertEqual(captured[0][1], "NaBi")
 

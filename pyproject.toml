@@ -4,16 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "symmband-agent"
-version = "0.1.0"
+version = "1.0.0"
 description = "Conversational symmetry-constrained crystal generation and analysis"
 requires-python = ">=3.10"
 
 [project.scripts]
-pydantic = "structure_agent:main"
+symmband = "structure_agent:main"
 symmband-research = "inverse_design_cli:main"
 
 [tool.setuptools]
-py-modules = ["structure_agent", "workflow_sym", "band_workflow", "band_result_analysis", "mace_energy", "emergent_particles", "inverse_design_cli"]
+py-modules = ["structure_agent", "workflow_sym", "band_workflow", "band_result_analysis", "physics_evidence", "physics_eval", "mace_energy", "emergent_particles", "inverse_design_cli"]
 
 [tool.setuptools.packages.find]
 where = ["."]

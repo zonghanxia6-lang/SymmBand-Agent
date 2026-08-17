@@ -14,7 +14,9 @@ from emergent_particles import EmergentParticle, HighSymmetryPath
 
 class FakeAnalyzer:
     valid = True
+    run = SimpleNamespace(converged_electronic=True)
     bs = SimpleNamespace(
+        kpoints=list(range(20)),
         branches=[
             {"start_index": 0, "end_index": 9, "name": "\\Gamma-A"},
             {"start_index": 10, "end_index": 19, "name": "K-H"},
@@ -31,6 +33,8 @@ class FakeAnalyzer:
                 "band_indices": (4, 5),
                 "irreps_swapped": ("DT7", "DT8"),
                 "energy_approx": 0.02,
+                "minimum_gap_ev": 0.006,
+                "neighboring_gaps_ev": (0.04, 0.05),
             },
             {
                 "k_interval": (14, 16),
@@ -39,6 +43,8 @@ class FakeAnalyzer:
                 "band_indices": (6, 7),
                 "irreps_swapped": ("P4 + P5", "P6"),
                 "energy_approx": -0.49,
+                "minimum_gap_ev": 0.024,
+                "neighboring_gaps_ev": (0.05, 0.04),
             },
         ]
 
@@ -83,7 +89,17 @@ class BandResultAnalysisTests(unittest.TestCase):
         self.assertEqual(report.spacegroup_symbol, "P6_3mc")
         self.assertTrue(report.soc)
         self.assertEqual(report.crossing_count, 2)
+        self.assertTrue(report.electronic_converged)
+        self.assertEqual(report.line_path_kpoint_count, 20)
+        self.assertEqual(report.crossings[0].minimum_gap_ev, 0.006)
+        self.assertEqual(report.crossings[0].gap_to_tolerance_ratio, 0.2)
+        self.assertEqual(report.crossings[0].energy_reference, "E - E_F (eV)")
+        self.assertEqual(
+            report.evidence_assessment.evidence_level,
+            "L3_path_taxonomy_unique_symmetry_candidate",
+        )
         self.assertEqual(report.confirmed_particle_types, ["DP"])
+        self.assertEqual(report.path_unique_particle_types, ["DP"])
         self.assertEqual(
             report.path_compatible_particle_types,
             ["DP", "TP", "WNL", "WNL net"],

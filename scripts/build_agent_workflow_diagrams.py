@@ -166,10 +166,10 @@ def conditional_generation_overlay() -> str:
 
 def integrated_svg(original_body: str) -> str:
     cards = [
-        (42, 470, "#0072B2", "01  GENERATE", "Frozen SymmCD + SMC", "formula / SG / DP-DNL / count"),
-        (540, 430, "#009E73", "02  RELAX + ENERGY", "MACE", "CIF/POSCAR · Eform · actual SG"),
+        (42, 470, "#0072B2", "01  GENERATE", "SymmCD structure generation", "formula · space group · count"),
+        (540, 430, "#009E73", "02  RELAX + ENERGY", "MACE potential", "CIF/POSCAR · energy · actual SG"),
         (998, 690, "#D97706", "03  CALCULATE BANDS", "VASP / atomate2 / IRVSP", "DFT · SOC · band image"),
-        (1716, 642, "#A64D9B", "04  RETRIEVE + EXPLAIN", "Local encyclopedia index", "particles · type · high-symmetry path"),
+        (1716, 642, "#A64D9B", "04  ANALYZE + EXPLAIN", "Band results + encyclopedia", "crossings · paths · sourced comparison"),
     ]
     card_markup = []
     for x, width, color, kicker, title_value, subtitle in cards:
@@ -196,7 +196,7 @@ def integrated_svg(original_body: str) -> str:
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      width="2400" height="1900" viewBox="0 0 2400 1900" role="img" aria-labelledby="agent-integrated-title agent-integrated-desc">
   <title id="agent-integrated-title">SymmBand-Agent integrated topological-material discovery workflow</title>
-  <desc id="agent-integrated-desc">A conversational Pydantic AI orchestration layer controls frozen-checkpoint particle-guided SymmCD generation with TDS-inspired sequential Monte Carlo, MACE energy and relaxation, electronic band calculations, and local emergent-particle knowledge retrieval.</desc>
+  <desc id="agent-integrated-desc">A conversational Pydantic AI orchestration layer routes validated requests into the unchanged four-stage workflow for SymmCD structure generation, MACE relaxation, electronic band calculations, and topological-result analysis with local encyclopedia retrieval.</desc>
 {COMMON_DEFS}
   <rect width="2400" height="1900" fill="#FFFFFF"/>
   <rect width="2400" height="492" fill="#F7FBFD"/>
@@ -245,7 +245,6 @@ def integrated_svg(original_body: str) -> str:
 
   <g transform="translate(0,500)">
 {original_body}
-{conditional_generation_overlay()}
   </g>
 </svg>
 """
@@ -358,11 +357,16 @@ def extract_original_body(source: str) -> str:
     return body
 
 
+def clean_svg(content: str) -> str:
+    """Keep generated SVG diffs stable across editors and platforms."""
+    return "\n".join(line.rstrip() for line in content.splitlines()) + "\n"
+
+
 def main() -> None:
     source = SOURCE.read_text(encoding="utf-8")
     original_body = extract_original_body(source)
-    INTEGRATED.write_text(integrated_svg(original_body), encoding="utf-8")
-    STANDALONE.write_text(standalone_svg(), encoding="utf-8")
+    INTEGRATED.write_text(clean_svg(integrated_svg(original_body)), encoding="utf-8")
+    STANDALONE.write_text(clean_svg(standalone_svg()), encoding="utf-8")
     print(f"Wrote {INTEGRATED.name}")
     print(f"Wrote {STANDALONE.name}")
 

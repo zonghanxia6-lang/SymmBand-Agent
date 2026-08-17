@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Any
 
 from ase.io import read
-from mace.calculators import mace_mp
 
 
 _MACE_CACHE: dict[tuple[str, str], Any] = {}
@@ -44,7 +43,16 @@ class MaceEnergyResult:
 
 
 def load_mace_calculator(model: str, device: str):
-    """Load and cache one MACE calculator per model/device pair."""
+    """Load and cache one MACE calculator per model/device pair.
+
+    MACE is imported here instead of at module import time.  Its training utilities
+    can indirectly import torchvision, whose image extension is irrelevant to path
+    validation and calculator-injected tests.  Other ML dependencies used by the main
+    CLI may still import torchvision, so the environment's native libraries must also
+    remain binary-compatible.
+    """
+    from mace.calculators import mace_mp
+
     cache_key = (str(model), device)
     with _MACE_CACHE_LOCK:
         if cache_key not in _MACE_CACHE:
